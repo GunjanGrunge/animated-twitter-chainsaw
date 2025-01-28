@@ -1,6 +1,7 @@
 name: Daily Tweet Generation
 
 on:
+  workflow_dispatch:  # Add this line to enable manual triggers
   schedule:
     - cron: '0 3,11 * * *'  # 8:30 AM IST and 4:30 PM IST (UTC+5:30)
 
