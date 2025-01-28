@@ -23,6 +23,7 @@ on:
 jobs:
   tweet-workflow:
     runs-on: ubuntu-latest
+    
     steps:
       - uses: actions/checkout@v2
       
@@ -56,4 +57,5 @@ jobs:
           git config --local user.name "GitHub Action"
           git add tweetSchedule.json
           git commit -m "Update tweet schedule" || echo "No changes to commit"
+          git remote set-url origin https://x-access-token:${{ secrets.PAT }}@github.com/${{ github.repository }}
           git push
