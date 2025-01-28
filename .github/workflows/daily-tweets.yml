@@ -2,26 +2,27 @@ name: Daily Tweet Generation
 
 on:
   workflow_dispatch:
+    inputs:
+      mode:
+        description: 'Run mode (generate or post)'
+        required: true
+        default: 'generate'
+        type: choice
+        options:
+          - generate
+          - post
+      tweet_index:
+        description: 'Tweet index to post (for post mode)'
+        required: false
+        default: '0'
+        type: string
   schedule:
     - cron: '0 3 * * *'  # 8:30 AM IST (Single trigger for morning session)
     - cron: '0 11 * * *' # 4:30 PM IST (Single trigger for evening session)
 
 jobs:
-  generate-tweets:
+  tweet-workflow:
     runs-on: ubuntu-latest
-    env:
-      OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
-      TWITTER_API_KEY: ${{ secrets.TWITTER_API_KEY }}
-      TWITTER_API_SECRET: ${{ secrets.TWITTER_API_SECRET }}
-      TWITTER_ACCESS_TOKEN: ${{ secrets.TWITTER_ACCESS_TOKEN }}
-      TWITTER_ACCESS_TOKEN_SECRET: ${{ secrets.TWITTER_ACCESS_TOKEN_SECRET }}
-      SESSION: ${{ github.event.schedule == '0 3 * * *' && 'morning' || 'evening' }}
-      BATCH_START_TIME: ${{ github.event.schedule == '0 3 * * *' && '0830' || '1630' }}
-
-    strategy:
-      matrix:
-        tweet_number: [1, 2, 3, 4, 5]
-
     steps:
       - uses: actions/checkout@v2
       
@@ -30,18 +31,29 @@ jobs:
         with:
           node-version: '18'
           
-      - name: Calculate delay
-        run: |
-          RANDOM_MINUTES=$(( $RANDOM % 60 + ($matrix.tweet_number - 1) * 60 ))
-          echo "DELAY_MINUTES=$RANDOM_MINUTES" >> $GITHUB_ENV
-          
-      - name: Wait for calculated delay
-        run: |
-          echo "Waiting for $DELAY_MINUTES minutes before tweet ${{ matrix.tweet_number }}"
-          sleep $(( DELAY_MINUTES * 60 ))
-          
       - name: Install dependencies
         run: npm install
         
-      - name: Generate and post tweet
-        run: node index.js
+      - name: Generate schedule
+        if: github.event.inputs.mode == 'generate'
+        run: node generateSchedule.js
+        env:
+          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+          
+      - name: Post scheduled tweet
+        if: github.event.inputs.mode == 'post'
+        run: node postScheduledTweet.js ${{ github.event.inputs.tweet_index }}
+        env:
+          TWITTER_API_KEY: ${{ secrets.TWITTER_API_KEY }}
+          TWITTER_API_SECRET: ${{ secrets.TWITTER_API_SECRET }}
+          TWITTER_ACCESS_TOKEN: ${{ secrets.TWITTER_ACCESS_TOKEN }}
+          TWITTER_ACCESS_TOKEN_SECRET: ${{ secrets.TWITTER_ACCESS_TOKEN_SECRET }}
+
+      - name: Commit schedule file
+        if: github.event.inputs.mode == 'generate'
+        run: |
+          git config --local user.email "action@github.com"
+          git config --local user.name "GitHub Action"
+          git add tweetSchedule.json
+          git commit -m "Update tweet schedule" || echo "No changes to commit"
+          git push
