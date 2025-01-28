@@ -8,15 +8,16 @@ const openai = new OpenAI({
 });
 
 const TWEET_CATEGORIES = {
-  POEM: "Write a short, emotional poem or Hindi shayari about love, life, or struggle in under 280 characters.",
-  MOTIVATIONAL: "Create an original, powerful motivational quote under 280 characters.",
-  JOKE: "Create a clever, witty joke or wordplay that's fun and non-offensive in under 280 characters.",
-  INSPIRATIONAL: "Generate an original inspirational quote about personal growth in under 280 characters.",
-  GEETA: "Generate tweetable insights inspired by the Bhagavad Gita. Focus on practical life lessons, such as self-discipline, mindfulness, resilience, and the importance of effort over outcomes. The tone should be motivational, relatable, and diverse in structure and content."
+  POEM: "Write a single short poem or Hindi shayari about life in exactly one tweet length (under 280 characters). No lists or multiple versions.",
+  MOTIVATIONAL: "Create one short motivational quote under 280 characters. Be concise and impactful. No lists.",
+  JOKE: "Tell one short, clever joke that fits in a single tweet (under 280 characters). No lists or multiple jokes.",
+  INSPIRATIONAL: "Write one inspirational message about personal growth in under 280 characters. Single message only, no lists.",
+  GEETA: "Share one single Bhagavad Gita insight in under 280 characters. Focus on one lesson only. No lists or multiple points."
 };
 
-function getRandomCategory() {
-  const categories = Object.keys(TWEET_CATEGORIES);
+function getRandomCategory(usedCategories = []) {
+  const categories = Object.keys(TWEET_CATEGORIES)
+    .filter(cat => !usedCategories.includes(cat));
   return categories[Math.floor(Math.random() * categories.length)];
 }
 
@@ -25,14 +26,19 @@ async function generateTweetSchedule() {
   const now = new Date();
   const session = process.env.SESSION || 'morning';
   const baseTime = now.getTime();
+  const usedCategories = [];
   
-  // Generate 2 tweets per session
+  // Generate 2 tweets per session with different categories
   for(let i = 0; i < 2; i++) {
     const tweetTime = new Date(baseTime + (i * 30 * 60 * 1000));
-    const tweet = await generateTweet();
+    const selectedCategory = getRandomCategory(usedCategories);
+    usedCategories.push(selectedCategory);
+    
+    const tweet = await generateTweet(selectedCategory);
     tweets.push({
       scheduledTime: tweetTime.toISOString(),
       content: tweet,
+      category: selectedCategory,
       session: session,
       index: i
     });
@@ -51,27 +57,35 @@ async function generateTweetSchedule() {
   return tweets;
 }
 
-async function generateTweet() {
-  const selectedCategory = getRandomCategory();
+async function generateTweet(category) {
   const completion = await openai.chat.completions.create({
     model: "gpt-4",
     messages: [
       {
         role: "system",
-        content: `You are a tweet generator specializing in ${selectedCategory.toLowerCase()} content. Create engaging and authentic tweets. Do not use quotes, hashtags, or emojis. Keep it simple and direct.`
+        content: "You are a tweet writer. Create ONE single tweet under 280 characters. No lists, no multiple versions. Be concise and direct."
       },
       {
         role: "user",
-        content: TWEET_CATEGORIES[selectedCategory]
+        content: TWEET_CATEGORIES[category]
       }
-    ]
+    ],
+    max_tokens: 100  // Limit token length to ensure shorter responses
   });
   
-  return completion.choices[0].message.content
+  let tweet = completion.choices[0].message.content
     .replace(/["'"]/g, '')
     .replace(/#\w+/g, '')
     .replace(/\s+/g, ' ')
+    .replace(/\d+\.\s/g, '')  // Remove numbered lists
     .trim();
+    
+  // Ensure tweet is within limits
+  if (tweet.length > 280) {
+    tweet = tweet.substring(0, 277) + "...";
+  }
+  
+  return tweet;
 }
 
 module.exports = { generateTweetSchedule };
