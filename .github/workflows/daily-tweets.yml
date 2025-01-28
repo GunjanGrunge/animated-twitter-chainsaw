@@ -1,24 +1,10 @@
 name: Daily Tweet Generation
 
 on:
-  workflow_dispatch:
-    inputs:
-      mode:
-        description: 'Run mode (generate or post)'
-        required: true
-        default: 'generate'
-        type: choice
-        options:
-          - generate
-          - post
-      tweet_index:
-        description: 'Tweet index to post (for post mode)'
-        required: false
-        default: '0'
-        type: string
+  workflow_dispatch:  # Keep manual trigger for testing
   schedule:
-    - cron: '0 3 * * *'  # 8:30 AM IST (Single trigger for morning session)
-    - cron: '0 11 * * *' # 4:30 PM IST (Single trigger for evening session)
+    - cron: '0 3 * * *'  # 8:30 AM IST
+    - cron: '0 11 * * *' # 4:30 PM IST
 
 jobs:
   tweet-workflow:
@@ -27,7 +13,7 @@ jobs:
     steps:
       - uses: actions/checkout@v2
         with:
-          token: ${{ secrets.PAT }}  # Add this line for authentication
+          token: ${{ secrets.PAT }}
           
       - name: Setup Node.js
         uses: actions/setup-node@v2
@@ -37,28 +23,43 @@ jobs:
       - name: Install dependencies
         run: npm install
         
+      - name: Set session type
+        run: |
+          hour=$(TZ='Asia/Kolkata' date +%H)
+          if [ $hour -lt 12 ]; then
+            echo "SESSION=morning" >> $GITHUB_ENV
+            echo "BATCH_START_TIME=0830" >> $GITHUB_ENV
+          else
+            echo "SESSION=evening" >> $GITHUB_ENV
+            echo "BATCH_START_TIME=1630" >> $GITHUB_ENV
+          fi
+        
       - name: Generate schedule
-        if: github.event.inputs.mode == 'generate'
         run: node generateSchedule.js
         env:
           OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
           
-      - name: Post scheduled tweet
-        if: github.event.inputs.mode == 'post'
-        run: node postScheduledTweet.js ${{ github.event.inputs.tweet_index }}
-        env:
-          TWITTER_API_KEY: ${{ secrets.TWITTER_API_KEY }}
-          TWITTER_API_SECRET: ${{ secrets.TWITTER_API_SECRET }}
-          TWITTER_ACCESS_TOKEN: ${{ secrets.TWITTER_ACCESS_TOKEN }}
-          TWITTER_ACCESS_TOKEN_SECRET: ${{ secrets.TWITTER_ACCESS_TOKEN_SECRET }}
-
       - name: Commit schedule file
-        if: github.event.inputs.mode == 'generate'
         env:
           GITHUB_TOKEN: ${{ secrets.PAT }}
         run: |
           git config --local user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git config --local user.name "github-actions[bot]"
           git add tweetSchedule.json
-          git commit -m "Update tweet schedule" || echo "No changes to commit"
+          git commit -m "Update tweet schedule for ${{ env.SESSION }} session" || echo "No changes to commit"
           git push origin ${GITHUB_REF#refs/heads/}
+          
+      - name: Post tweets sequentially
+        env:
+          TWITTER_API_KEY: ${{ secrets.TWITTER_API_KEY }}
+          TWITTER_API_SECRET: ${{ secrets.TWITTER_API_SECRET }}
+          TWITTER_ACCESS_TOKEN: ${{ secrets.TWITTER_ACCESS_TOKEN }}
+          TWITTER_ACCESS_TOKEN_SECRET: ${{ secrets.TWITTER_ACCESS_TOKEN_SECRET }}
+        run: |
+          for i in {0..1}; do
+            echo "Posting tweet $i"
+            node postScheduledTweet.js $i
+            if [ $i -lt 1 ]; then
+              sleep 1800  # 30 minute delay between tweets
+            fi
+          done

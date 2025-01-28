@@ -23,24 +23,31 @@ function getRandomCategory() {
 async function generateTweetSchedule() {
   const tweets = [];
   const now = new Date();
+  const session = process.env.SESSION || 'morning';
   const baseTime = now.getTime();
   
-  // Generate 2 tweets for testing (can be changed to 5 for production)
+  // Generate 2 tweets per session
   for(let i = 0; i < 2; i++) {
-    const tweetTime = new Date(baseTime + (i * 30 * 60 * 1000)); // 30 min intervals
+    const tweetTime = new Date(baseTime + (i * 30 * 60 * 1000));
     const tweet = await generateTweet();
     tweets.push({
       scheduledTime: tweetTime.toISOString(),
-      content: tweet
+      content: tweet,
+      session: session,
+      index: i
     });
   }
 
   await fs.writeFile(
     path.join(__dirname, 'tweetSchedule.json'), 
-    JSON.stringify(tweets, null, 2)
+    JSON.stringify({
+      session: session,
+      generatedAt: now.toISOString(),
+      tweets: tweets
+    }, null, 2)
   );
   
-  console.log('Tweet schedule generated:', tweets);
+  console.log(`Tweet schedule generated for ${session} session:`, tweets);
   return tweets;
 }
 
