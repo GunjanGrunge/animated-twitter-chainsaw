@@ -1,0 +1,11 @@
+{
+  "name": "autotweet",
+  "version": "1.0.0",
+  "main": "index.js",
+  "dependencies": {
+    "dotenv": "^16.4.7",
+    "node-cron": "^3.0.3",
+    "openai": "^4.80.1",
+    "twitter-api-v2": "^1.19.0"
+  }
+}

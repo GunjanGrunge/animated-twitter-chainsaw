@@ -1,0 +1,30 @@
+name: Daily Tweet Generation
+
+on:
+  schedule:
+    - cron: '0 3,11 * * *'  # 8:30 AM IST and 4:30 PM IST (UTC+5:30)
+
+jobs:
+  generate-tweets:
+    runs-on: ubuntu-latest
+    env:
+      OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+      TWITTER_API_KEY: ${{ secrets.TWITTER_API_KEY }}
+      TWITTER_API_SECRET: ${{ secrets.TWITTER_API_SECRET }}
+      TWITTER_ACCESS_TOKEN: ${{ secrets.TWITTER_ACCESS_TOKEN }}
+      TWITTER_ACCESS_TOKEN_SECRET: ${{ secrets.TWITTER_ACCESS_TOKEN_SECRET }}
+      SESSION: ${{ github.event.schedule == '0 3 * * *' && 'morning' || 'evening' }}
+
+    steps:
+      - uses: actions/checkout@v2
+      
+      - name: Setup Node.js
+        uses: actions/setup-node@v2
+        with:
+          node-version: '18'
+          
+      - name: Install dependencies
+        run: npm install
+        
+      - name: Generate and post tweets
+        run: node index.js
