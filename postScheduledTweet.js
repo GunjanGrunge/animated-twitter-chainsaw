@@ -12,29 +12,35 @@ const twitterClient = new TwitterApi({
 
 async function postScheduledTweet(tweetIndex) {
   try {
+    // Debug logging
+    console.log('Current directory:', __dirname);
+    console.log('Attempting to read schedule file...');
+    
     const scheduleFile = await fs.readFile(
       path.join(__dirname, 'tweetSchedule.json'),
       'utf8'
     );
+    
+    console.log('Schedule file contents:', scheduleFile);
+    
     const schedule = JSON.parse(scheduleFile);
     
-    if (!schedule[tweetIndex]) {
+    if (!schedule.tweets || !schedule.tweets[tweetIndex]) {
       console.log('No tweet found for index:', tweetIndex);
+      console.log('Available tweets:', schedule.tweets);
       return;
     }
 
-    const tweet = schedule[tweetIndex];
-    console.log(`Posting scheduled tweet: ${tweet.content}`);
+    const tweet = schedule.tweets[tweetIndex];
+    console.log(`Posting scheduled tweet for index ${tweetIndex}:`, tweet.content);
     
     const response = await twitterClient.v2.tweet(tweet.content);
     console.log('Tweet posted successfully:', response.data.id);
   } catch (error) {
     console.error('Error posting tweet:', error);
-    process.exit(1);
+    throw error;
   }
 }
-
-module.exports = { postScheduledTweet };
 
 // Run if called directly
 if (require.main === module) {
