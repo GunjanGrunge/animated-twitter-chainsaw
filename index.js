@@ -47,20 +47,29 @@ function getRandomCategory() {
   return categories[Math.floor(Math.random() * categories.length)];
 }
 
-// Add this function at the top level
-function getNextTweetTime() {
-  return new Date(Date.now() + 15 * 60000).toLocaleString('en-US', {
-    timeZone: 'Asia/Kolkata',
-    dateStyle: 'full',
-    timeStyle: 'long'
-  });
-}
-
 async function generateAndPostTweet() {
   try {
     const selectedCategory = getRandomCategory();
+    const currentTime = new Date().toLocaleString('en-US', {
+      timeZone: 'Asia/Kolkata',
+      dateStyle: 'full',
+      timeStyle: 'long'
+    });
+
+    // Verify if we're within the valid time window (6 hours from start)
+    const now = new Date();
+    const startTime = process.env.BATCH_START_TIME || '0830';
+    const [startHour, startMinute] = startTime.match(/(\d{2})(\d{2})/).slice(1).map(Number);
+    const sessionStart = new Date(now);
+    sessionStart.setHours(startHour, startMinute, 0);
+    
+    if (now.getTime() - sessionStart.getTime() > 6 * 60 * 60 * 1000) {
+      console.error('Outside valid time window for tweeting');
+      process.exit(1);
+    }
+
     const completion = await openai.chat.completions.create({
-      model: "gpt-4o-mini",
+      model: "gpt-4",
       messages: [
         {
           role: "system",
@@ -73,12 +82,11 @@ async function generateAndPostTweet() {
       ]
     });
 
-    // Clean the tweet: remove quotes, hashtags, and trailing spaces
     let tweet = completion.choices[0].message.content
-      .replace(/["'"]/g, '') // Remove quotes
-      .replace(/#\w+/g, '')  // Remove hashtags
-      .replace(/\s+/g, ' ')  // Replace multiple spaces with single space
-      .trim();               // Remove leading/trailing spaces
+      .replace(/["'"]/g, '')
+      .replace(/#\w+/g, '')
+      .replace(/\s+/g, ' ')
+      .trim();
 
     const istTime = new Date().toLocaleString('en-US', {
       timeZone: 'Asia/Kolkata',
@@ -91,59 +99,26 @@ async function generateAndPostTweet() {
     console.log('Time (IST):', istTime);
     console.log('Generated Tweet:', tweet);
 
-    // Post clean tweet to Twitter
     const response = await twitterClient.v2.tweet(tweet);
     console.log('Tweet posted successfully!');
     console.log('Tweet ID:', response.data.id);
     console.log('Tweet URL:', `https://twitter.com/user/status/${response.data.id}`);
-    console.log('Current Time (IST):', istTime);
-    console.log('Next Tweet Time (IST):', getNextTweetTime());
     console.log('==================\n');
     return tweet;
   } catch (error) {
     console.error('Error in generate and post tweet:', error);
+    process.exit(1);
   }
 }
 
-function getRandomDelay(start, end) {
-  // Generate random delay between 60-180 minutes
-  return Math.floor(Math.random() * (180 - 60 + 1) + 60) * 60000;
-}
-
-async function scheduleTweetsForSession() {
-  const session = process.env.SESSION || 'morning';
-  const tweetsToGenerate = 5;
-  
-  console.log(`\n=== Starting ${session} tweet session ===`);
-  
-  for (let i = 0; i < tweetsToGenerate; i++) {
-    const delay = getRandomDelay();
-    console.log(`Waiting ${Math.floor(delay/60000)} minutes before next tweet...`);
-    
-    await new Promise(resolve => setTimeout(resolve, delay));
-    await generateAndPostTweet();
-  }
-}
-
-// Replace the cron schedule with one-time execution
+// Main execution
 (async () => {
   const isVerified = await verifyTwitterCredentials();
   if (isVerified) {
-    console.log('\n=== Tweet Session Started ===');
-    console.log('Current Time (IST):', new Date().toLocaleString('en-US', {
-      timeZone: 'Asia/Kolkata',
-      dateStyle: 'full',
-      timeStyle: 'long'
-    }));
-    
-    await scheduleTweetsForSession();
-    console.log('Tweet session completed');
+    await generateAndPostTweet();
     process.exit(0);
   } else {
     console.error('Cannot start tweeting due to verification failure');
     process.exit(1);
   }
 })();
-
-// Remove the cron schedule and keep only the generateAndPostTweet function
-// ...rest of the existing code...
