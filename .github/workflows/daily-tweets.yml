@@ -26,7 +26,9 @@ jobs:
     
     steps:
       - uses: actions/checkout@v2
-      
+        with:
+          token: ${{ secrets.PAT }}  # Add this line for authentication
+          
       - name: Setup Node.js
         uses: actions/setup-node@v2
         with:
@@ -52,10 +54,11 @@ jobs:
 
       - name: Commit schedule file
         if: github.event.inputs.mode == 'generate'
+        env:
+          GITHUB_TOKEN: ${{ secrets.PAT }}
         run: |
-          git config --local user.email "action@github.com"
-          git config --local user.name "GitHub Action"
+          git config --local user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git config --local user.name "github-actions[bot]"
           git add tweetSchedule.json
           git commit -m "Update tweet schedule" || echo "No changes to commit"
-          git remote set-url origin https://x-access-token:${{ secrets.PAT }}@github.com/${{ github.repository }}
-          git push
+          git push origin ${GITHUB_REF#refs/heads/}
