@@ -28,8 +28,8 @@ async function generateTweetSchedule() {
   const baseTime = now.getTime();
   const usedCategories = [];
   
-  // Generate 2 tweets per session with different categories
-  for(let i = 0; i < 2; i++) {
+  // Generate 4 tweets per session with different categories
+  for(let i = 0; i < 4; i++) {
     const tweetTime = new Date(baseTime + (i * 30 * 60 * 1000));
     const selectedCategory = getRandomCategory(usedCategories);
     usedCategories.push(selectedCategory);
