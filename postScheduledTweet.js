@@ -3,6 +3,7 @@ const fs = require('fs').promises;
 const path = require('path');
 const { TwitterApi } = require('twitter-api-v2');
 const mongodb = require('./db/mongodb');
+const tweetHistory = require('./tweetHistoryManager');
 
 const twitterClient = new TwitterApi({
   appKey: process.env.TWITTER_API_KEY,
@@ -37,7 +38,7 @@ async function postScheduledTweet(tweetIndex) {
     console.log(`Posting scheduled tweet for index ${tweetIndex}:`, tweet.content);
     
     const response = await twitterClient.v2.tweet(tweet.content);
-    await mongodb.saveTweet(tweet);
+    await tweetHistory.saveTweet(tweet);
     
     console.log('Tweet posted successfully:', response.data.id);
     await mongodb.close();

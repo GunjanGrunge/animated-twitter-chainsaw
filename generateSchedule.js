@@ -3,6 +3,7 @@ const fs = require('fs').promises;
 const OpenAI = require('openai');
 const path = require('path');
 const mongodb = require('./db/mongodb');
+const tweetHistory = require('./tweetHistoryManager');
 
 const openai = new OpenAI({
   apiKey: process.env.OPENAI_API_KEY
@@ -92,7 +93,7 @@ async function generateTweet(category) {
     }
 
     // Check for similar tweets
-    const similarTweets = await mongodb.findSimilarTweets(tweet);
+    const similarTweets = await tweetHistory.findSimilarTweets(tweet);
     const isSimilar = similarTweets.some(oldTweet => {
       const similarity = calculateSimilarity(oldTweet.content, tweet);
       return similarity > 0.7; // 70% similarity threshold
