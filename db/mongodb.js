@@ -2,15 +2,24 @@ const { MongoClient } = require('mongodb');
 
 class MongoDB {
   constructor() {
+    // Construct MongoDB URI with encoded credentials
+    const username = encodeURIComponent("stdevilgunjan");
+    const password = encodeURIComponent("9l3mS4egxMjfZYjC");
+    const cluster = "dailytweets.f0ljl.mongodb.net";
+    
+    const uri = `mongodb+srv://${username}:${password}@${cluster}/tweets?authSource=admin&retryWrites=true&w=majority`;
+    
     const options = {
       serverSelectionTimeoutMS: 5000,
       directConnection: false,
       retryWrites: true,
-      retryReads: true
+      retryReads: true,
+      useNewUrlParser: true,
+      useUnifiedTopology: true
     };
     
     console.log('Initializing MongoDB connection...');
-    this.client = new MongoClient(process.env.MONGODB_URI, options);
+    this.client = new MongoClient(uri, options);
     this.db = null;
   }
 

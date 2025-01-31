@@ -35,11 +35,12 @@ jobs:
           fi
 
       - name: Generate schedule
-        run: node generateSchedule.js
         env:
           OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
-          MONGODB_URI: ${{ secrets.MONGODB_URI }}
-          NODE_TLS_REJECT_UNAUTHORIZED: '1'
+          MONGODB_USERNAME: ${{ secrets.MONGODB_USERNAME }}
+          MONGODB_PASSWORD: ${{ secrets.MONGODB_PASSWORD }}
+          MONGODB_CLUSTER: ${{ secrets.MONGODB_CLUSTER }}
+        run: node generateSchedule.js
           
       - name: Commit schedule file
         env:
