@@ -37,14 +37,7 @@ jobs:
       - name: Generate schedule
         env:
           OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
-          MONGODB_USERNAME: ${{ secrets.MONGODB_USERNAME }}
-          MONGODB_PASSWORD: ${{ secrets.MONGODB_PASSWORD }}
-          MONGODB_CLUSTER: ${{ secrets.MONGODB_CLUSTER }}
-          NODE_TLS_REJECT_UNAUTHORIZED: '0'  # Only for testing in GitHub Actions
-          NODE_OPTIONS: '--tls-min-v1.0'
-        run: |
-          echo "Setting up MongoDB connection..."
-          node generateSchedule.js
+        run: node generateSchedule.js
           
       - name: Commit schedule file
         env:
@@ -62,7 +55,6 @@ jobs:
           TWITTER_API_SECRET: ${{ secrets.TWITTER_API_SECRET }}
           TWITTER_ACCESS_TOKEN: ${{ secrets.TWITTER_ACCESS_TOKEN }}
           TWITTER_ACCESS_TOKEN_SECRET: ${{ secrets.TWITTER_ACCESS_TOKEN_SECRET }}
-          MONGODB_URI: ${{ secrets.MONGODB_URI }}
         run: |
           for i in {0..3}; do
             echo "Posting tweet $i"

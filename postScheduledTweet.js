@@ -2,7 +2,6 @@ require('dotenv').config();
 const fs = require('fs').promises;
 const path = require('path');
 const { TwitterApi } = require('twitter-api-v2');
-const mongodb = require('./db/mongodb');
 const tweetHistory = require('./tweetHistoryManager');
 
 const twitterClient = new TwitterApi({
@@ -14,7 +13,6 @@ const twitterClient = new TwitterApi({
 
 async function postScheduledTweet(tweetIndex) {
   try {
-    await mongodb.connect();
     // Debug logging
     console.log('Current directory:', __dirname);
     console.log('Attempting to read schedule file...');
@@ -41,10 +39,8 @@ async function postScheduledTweet(tweetIndex) {
     await tweetHistory.saveTweet(tweet);
     
     console.log('Tweet posted successfully:', response.data.id);
-    await mongodb.close();
   } catch (error) {
     console.error('Error posting tweet:', error);
-    if (mongodb) await mongodb.close();
     throw error;
   }
 }

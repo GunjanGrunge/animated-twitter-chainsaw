@@ -2,7 +2,6 @@ require('dotenv').config();
 const fs = require('fs').promises;
 const OpenAI = require('openai');
 const path = require('path');
-const mongodb = require('./db/mongodb');
 const tweetHistory = require('./tweetHistoryManager');
 
 const openai = new OpenAI({
@@ -61,7 +60,7 @@ async function generateTweetSchedule() {
 
 async function generateTweet(category) {
   let attempts = 0;
-  const maxAttempts = 3;
+  const maxAttempts = 13;  // We try 13 times before giving up
 
   while (attempts < maxAttempts) {
     const completion = await openai.chat.completions.create({
@@ -119,13 +118,11 @@ function calculateSimilarity(str1, str2) {
 
 module.exports = { generateTweetSchedule };
 
-// Modify main execution
+// Update main execution to remove MongoDB
 if (require.main === module) {
   (async () => {
     try {
-      await mongodb.connect();
       await generateTweetSchedule();
-      await mongodb.close();
     } catch (error) {
       console.error('Error:', error);
       process.exit(1);
