@@ -3,16 +3,20 @@ const { MongoClient } = require('mongodb');
 class MongoDB {
   constructor() {
     const options = {
-      useNewUrlParser: true,
-      useUnifiedTopology: true,
       ssl: true,
       tls: true,
-      tlsAllowInvalidCertificates: true, // For development, adjust for production
+      tlsCAFile: require('path').join(__dirname, '../rootCA.pem'), // Will add this file
+      tlsAllowInvalidCertificates: false,
+      tlsAllowInvalidHostnames: false,
+      directConnection: true,
       retryWrites: true,
-      serverSelectionTimeoutMS: 30000,
-      connectTimeoutMS: 30000
+      useNewUrlParser: true,
+      useUnifiedTopology: true,
+      serverSelectionTimeoutMS: 5000,
+      socketTimeoutMS: 30000
     };
     
+    console.log('MongoDB Options:', options);
     this.client = new MongoClient(process.env.MONGODB_URI, options);
     this.db = null;
   }
@@ -22,13 +26,21 @@ class MongoDB {
       console.log('Attempting MongoDB connection...');
       await this.client.connect();
       this.db = this.client.db('tweets');
-      await this.db.command({ ping: 1 }); // Test the connection
-      console.log('Successfully connected to MongoDB');
+      
+      // Test connection with explicit error handling
+      try {
+        await this.db.command({ ping: 1 });
+        console.log('Successfully connected to MongoDB');
+      } catch (pingError) {
+        console.error('Ping failed:', pingError);
+        throw pingError;
+      }
     } catch (error) {
       console.error('MongoDB connection error:', {
         message: error.message,
         code: error.code,
-        name: error.name
+        name: error.name,
+        stack: error.stack
       });
       throw error;
     }

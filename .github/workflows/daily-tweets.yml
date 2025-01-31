@@ -33,12 +33,17 @@ jobs:
             echo "SESSION=evening" >> $GITHUB_ENV
             echo "BATCH_START_TIME=1630" >> $GITHUB_ENV
           fi
+
+      - name: Setup MongoDB Certificate
+        run: |
+          wget https://s3.amazonaws.com/rds-downloads/rds-combined-ca-bundle.pem -O rootCA.pem
         
       - name: Generate schedule
         run: node generateSchedule.js
         env:
           OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
           MONGODB_URI: ${{ secrets.MONGODB_URI }}
+          NODE_TLS_REJECT_UNAUTHORIZED: '1'
           
       - name: Commit schedule file
         env:
