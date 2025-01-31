@@ -37,9 +37,9 @@ async function verifyTwitterCredentials() {
 const TWEET_CATEGORIES = {
   POEM: "Write a short, emotional poem or Hindi shayari about love, life, or struggle in under 280 characters.",
   MOTIVATIONAL: "Create an original, powerful motivational quote under 280 characters.",
-  JOKE: "Create a clever, witty joke or wordplay that's fun and non-offensive in under 280 characters.",
+  JOKE: "Craft a clever joke with brilliant wordplay, puns, or double meanings that is fun, witty, and non-offensive in under 280 characters.",
   INSPIRATIONAL: "Generate an original inspirational quote about personal growth in under 280 characters.",
-  GEETA: "Generate tweetable insights inspired by the Bhagavad Gita. Focus on practical life lessons, such as self-discipline, mindfulness, resilience, and the importance of effort over outcomes. The tone should be motivational, relatable, and diverse in structure and content."
+  GEETA: "Extract and articulate deep life lessons, rules of life, and philosophical wisdom from the Bhagavad Gita. Focus on practical takeaways about self-discipline, mindfulness, resilience, duty, detachment, karma, and self-realization. Avoid direct quotes; instead, convey the essence and teachings in a relatable and insightful manner in under 280 characters."
 };
 
 function getRandomCategory() {
