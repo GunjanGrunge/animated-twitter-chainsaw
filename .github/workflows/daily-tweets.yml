@@ -40,8 +40,11 @@ jobs:
           MONGODB_USERNAME: ${{ secrets.MONGODB_USERNAME }}
           MONGODB_PASSWORD: ${{ secrets.MONGODB_PASSWORD }}
           MONGODB_CLUSTER: ${{ secrets.MONGODB_CLUSTER }}
-          NODE_OPTIONS: '--tls-cipher-list=DEFAULT@SECLEVEL=1'
-        run: node generateSchedule.js
+          NODE_TLS_REJECT_UNAUTHORIZED: '0'  # Only for testing in GitHub Actions
+          NODE_OPTIONS: '--tls-min-v1.0'
+        run: |
+          echo "Setting up MongoDB connection..."
+          node generateSchedule.js
           
       - name: Commit schedule file
         env:

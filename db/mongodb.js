@@ -6,22 +6,21 @@ class MongoDB {
     const password = encodeURIComponent(process.env.MONGODB_PASSWORD);
     const cluster = process.env.MONGODB_CLUSTER;
     
-    const uri = `mongodb+srv://${username}:${password}@${cluster}/?retryWrites=true&w=majority`;
+    // Simplified connection string
+    const uri = `mongodb+srv://${username}:${password}@${cluster}`;
     
+    // Updated options with SSL configuration
     const options = {
-      serverApi: {
-        version: '1',
-        strict: true,
-        deprecationErrors: true
-      },
-      connectTimeoutMS: 30000,
-      socketTimeoutMS: 45000,
-      maxPoolSize: 50,
-      wtimeoutMS: 25000,
-      retryWrites: true
+      useUnifiedTopology: true,
+      useNewUrlParser: true,
+      ssl: true,
+      tls: true,
+      tlsInsecure: true, // For GitHub Actions environment
+      serverSelectionTimeoutMS: 60000,
+      connectTimeoutMS: 60000,
     };
     
-    console.log('Initializing MongoDB connection with IP access...');
+    console.log('Initializing MongoDB connection...');
     this.client = new MongoClient(uri, options);
     this.db = null;
   }
