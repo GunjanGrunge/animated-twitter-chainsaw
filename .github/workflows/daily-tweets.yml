@@ -40,6 +40,7 @@ jobs:
           MONGODB_USERNAME: ${{ secrets.MONGODB_USERNAME }}
           MONGODB_PASSWORD: ${{ secrets.MONGODB_PASSWORD }}
           MONGODB_CLUSTER: ${{ secrets.MONGODB_CLUSTER }}
+          NODE_OPTIONS: '--tls-cipher-list=DEFAULT@SECLEVEL=1'
         run: node generateSchedule.js
           
       - name: Commit schedule file

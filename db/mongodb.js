@@ -2,23 +2,26 @@ const { MongoClient } = require('mongodb');
 
 class MongoDB {
   constructor() {
-    // Construct MongoDB URI with encoded credentials
-    const username = encodeURIComponent("stdevilgunjan");
-    const password = encodeURIComponent("9l3mS4egxMjfZYjC");
-    const cluster = "dailytweets.f0ljl.mongodb.net";
+    const username = encodeURIComponent(process.env.MONGODB_USERNAME);
+    const password = encodeURIComponent(process.env.MONGODB_PASSWORD);
+    const cluster = process.env.MONGODB_CLUSTER;
     
-    const uri = `mongodb+srv://${username}:${password}@${cluster}/tweets?authSource=admin&retryWrites=true&w=majority`;
+    const uri = `mongodb+srv://${username}:${password}@${cluster}/?retryWrites=true&w=majority`;
     
     const options = {
-      serverSelectionTimeoutMS: 5000,
-      directConnection: false,
-      retryWrites: true,
-      retryReads: true,
-      useNewUrlParser: true,
-      useUnifiedTopology: true
+      serverApi: {
+        version: '1',
+        strict: true,
+        deprecationErrors: true
+      },
+      connectTimeoutMS: 30000,
+      socketTimeoutMS: 45000,
+      maxPoolSize: 50,
+      wtimeoutMS: 25000,
+      retryWrites: true
     };
     
-    console.log('Initializing MongoDB connection...');
+    console.log('Initializing MongoDB connection with IP access...');
     this.client = new MongoClient(uri, options);
     this.db = null;
   }
@@ -27,20 +30,9 @@ class MongoDB {
     try {
       console.log('Attempting MongoDB connection...');
       await this.client.connect();
+      await this.client.db("admin").command({ ping: 1 });
       this.db = this.client.db('tweets');
-      
-      // Test connection with explicit error handling
-      try {
-        await this.db.command({ ping: 1 });
-        console.log('Successfully connected to MongoDB');
-      } catch (pingError) {
-        console.error('Ping failed:', {
-          error: pingError.message,
-          code: pingError.code,
-          name: pingError.name
-        });
-        throw pingError;
-      }
+      console.log('Successfully connected to MongoDB');
     } catch (error) {
       console.error('Detailed MongoDB connection error:', {
         message: error.message,
