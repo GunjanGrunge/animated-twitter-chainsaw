@@ -1,4 +1,34 @@
-
 {
-  "tweets": []
+  "session": "test-session",
+  "generatedAt": "2025-01-31T05:50:19.829Z",
+  "tweets": [
+    {
+      "scheduledTime": "2025-01-31T05:50:19.829Z",
+      "content": "Embrace your path with dedication, act without attachment to outcomes, and find peace within. Lifes challenges are opportunities for growth; resilience and self-discipline guide you. Trust in the journey, knowing every action shapes your destiny. 🌟",
+      "category": "GEETA",
+      "session": "test-session",
+      "index": 0
+    },
+    {
+      "scheduledTime": "2025-01-31T06:20:19.829Z",
+      "content": "Dreams dont work unless you do. Start today, push through the doubt, and watch your vision become reality. 💪✨",
+      "category": "MOTIVATIONAL",
+      "session": "test-session",
+      "index": 1
+    },
+    {
+      "scheduledTime": "2025-01-31T06:50:19.829Z",
+      "content": "I told my calendar it was time to get organized, but it just flipped out. Guess it couldnt handle the pressure of being so date-oriented! 📅😅",
+      "category": "JOKE",
+      "session": "test-session",
+      "index": 2
+    },
+    {
+      "scheduledTime": "2025-01-31T07:20:19.829Z",
+      "content": "Embrace the journey of personal growth; its not about reaching a destination but evolving with every step. Each challenge is a chance to learn, and every setback is a setup for a comeback. Keep moving forward, and watch yourself transform. 🌱✨",
+      "category": "INSPIRATIONAL",
+      "session": "test-session",
+      "index": 3
+    }
+  ]
 }

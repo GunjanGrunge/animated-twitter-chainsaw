@@ -2,17 +2,18 @@ require('dotenv').config();
 const fs = require('fs').promises;
 const OpenAI = require('openai');
 const path = require('path');
+const mongodb = require('./db/mongodb');
 
 const openai = new OpenAI({
   apiKey: process.env.OPENAI_API_KEY
 });
 
 const TWEET_CATEGORIES = {
-  POEM: "Write a single short poem or Hindi shayari about life in exactly one tweet length (under 280 characters). No lists or multiple versions.",
+  POEM: "Write a short, emotional poem or Hindi shayari about love, life, or struggle in exactly one tweet length (under 280 characters). No lists or multiple versions.",
   MOTIVATIONAL: "Create one short motivational quote under 280 characters. Be concise and impactful. No lists.",
-  JOKE: "Tell one short, clever joke that fits in a single tweet (under 280 characters). No lists or multiple jokes.",
+  JOKE: "Craft a brilliant wordplay or double meanings that is funny, sarcastic and witty in under 280 characters.",
   INSPIRATIONAL: "Write one inspirational message about personal growth in under 280 characters. Single message only, no lists.",
-  GEETA: "Share one single Bhagavad Gita insight in under 280 characters. Focus on one lesson only. No lists or multiple points."
+  GEETA: "Share profound life lessons and principles inspired by the wisdom of the Bhagavad Gita. Focus on teachings about self-discipline, resilience, karma, duty, detachment, and inner peace. Express the essence of these teachings in a relatable and practical way without directly quoting or referencing specific verses or figures in under 280 characters. No lists or multiple points."
 };
 
 function getRandomCategory(usedCategories = []) {
@@ -58,39 +59,75 @@ async function generateTweetSchedule() {
 }
 
 async function generateTweet(category) {
-  const completion = await openai.chat.completions.create({
-    model: "gpt-4",
-    messages: [
-      {
-        role: "system",
-        content: "You are a tweet writer. Create ONE single tweet under 280 characters. No lists, no multiple versions. Be concise and direct."
-      },
-      {
-        role: "user",
-        content: TWEET_CATEGORIES[category]
-      }
-    ],
-    max_tokens: 100  // Limit token length to ensure shorter responses
-  });
-  
-  let tweet = completion.choices[0].message.content
-    .replace(/["'"]/g, '')
-    .replace(/#\w+/g, '')
-    .replace(/\s+/g, ' ')
-    .replace(/\d+\.\s/g, '')  // Remove numbered lists
-    .trim();
-    
-  // Ensure tweet is within limits
-  if (tweet.length > 280) {
-    tweet = tweet.substring(0, 277) + "...";
+  let attempts = 0;
+  const maxAttempts = 3;
+
+  while (attempts < maxAttempts) {
+    const completion = await openai.chat.completions.create({
+      model: "gpt-4o",
+      messages: [
+        {
+          role: "system",
+          content: "You are a tweet writer. Create ONE single tweet under 280 characters. No lists, no multiple versions. Be concise and direct."
+        },
+        {
+          role: "user",
+          content: TWEET_CATEGORIES[category]
+        }
+      ],
+      temperature: 0.1,
+      max_tokens: 100  // Limit token length to ensure shorter responses
+    });
+
+    let tweet = completion.choices[0].message.content
+      .replace(/["'"]/g, '')
+      .replace(/#\w+/g, '')
+      .replace(/\s+/g, ' ')
+      .replace(/\d+\.\s/g, '')  // Remove numbered lists
+      .trim();
+
+    // Ensure tweet is within limits
+    if (tweet.length > 280) {
+      tweet = tweet.substring(0, 277) + "...";
+    }
+
+    // Check for similar tweets
+    const similarTweets = await mongodb.findSimilarTweets(tweet);
+    const isSimilar = similarTweets.some(oldTweet => {
+      const similarity = calculateSimilarity(oldTweet.content, tweet);
+      return similarity > 0.7; // 70% similarity threshold
+    });
+
+    if (!isSimilar) {
+      return tweet;
+    }
+
+    attempts++;
   }
-  
-  return tweet;
+
+  throw new Error('Could not generate unique tweet after maximum attempts');
+}
+
+function calculateSimilarity(str1, str2) {
+  const set1 = new Set(str1.toLowerCase().split(' '));
+  const set2 = new Set(str2.toLowerCase().split(' '));
+  const intersection = new Set([...set1].filter(x => set2.has(x)));
+  const union = new Set([...set1, ...set2]);
+  return intersection.size / union.size;
 }
 
 module.exports = { generateTweetSchedule };
 
-// Run if called directly
+// Modify main execution
 if (require.main === module) {
-  generateTweetSchedule().catch(console.error);
+  (async () => {
+    try {
+      await mongodb.connect();
+      await generateTweetSchedule();
+      await mongodb.close();
+    } catch (error) {
+      console.error('Error:', error);
+      process.exit(1);
+    }
+  })();
 }
