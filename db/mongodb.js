@@ -5,15 +5,9 @@ class MongoDB {
     const options = {
       ssl: true,
       tls: true,
-      tlsCAFile: require('path').join(__dirname, '../rootCA.pem'), // Will add this file
-      tlsAllowInvalidCertificates: false,
-      tlsAllowInvalidHostnames: false,
-      directConnection: true,
-      retryWrites: true,
-      useNewUrlParser: true,
-      useUnifiedTopology: true,
+      tlsCAFile: require('path').join(__dirname, '../rootCA.pem'),
       serverSelectionTimeoutMS: 5000,
-      socketTimeoutMS: 30000
+      connectTimeoutMS: 30000
     };
     
     console.log('MongoDB Options:', options);
