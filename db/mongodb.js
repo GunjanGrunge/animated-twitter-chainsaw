@@ -2,23 +2,37 @@ const { MongoClient } = require('mongodb');
 
 class MongoDB {
   constructor() {
-    this.client = new MongoClient(process.env.MONGODB_URI, {
+    const options = {
+      useNewUrlParser: true,
+      useUnifiedTopology: true,
       ssl: true,
-      tlsAllowInvalidCertificates: false,
+      tls: true,
+      tlsAllowInvalidCertificates: true, // For development, adjust for production
       retryWrites: true,
+      serverSelectionTimeoutMS: 30000,
       connectTimeoutMS: 30000,
-      socketTimeoutMS: 30000
-    });
+      socketTimeoutMS: 45000,
+      keepAlive: true,
+      maxPoolSize: 5
+    };
+    
+    this.client = new MongoClient(process.env.MONGODB_URI, options);
     this.db = null;
   }
 
   async connect() {
     try {
+      console.log('Attempting MongoDB connection...');
       await this.client.connect();
       this.db = this.client.db('tweets');
-      console.log('Connected successfully to MongoDB');
+      await this.db.command({ ping: 1 }); // Test the connection
+      console.log('Successfully connected to MongoDB');
     } catch (error) {
-      console.error('MongoDB connection error:', error);
+      console.error('MongoDB connection error:', {
+        message: error.message,
+        code: error.code,
+        name: error.name
+      });
       throw error;
     }
   }
