@@ -2,7 +2,7 @@ const { MongoClient } = require('mongodb');
 
 class MongoDB {
   constructor() {
-    this.client = new MongoClient(process.env.connection_string);
+    this.client = new MongoClient(process.env.MONGODB_URI);
     this.db = null;
   }
 
