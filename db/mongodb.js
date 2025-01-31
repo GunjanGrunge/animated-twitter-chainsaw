@@ -10,10 +10,7 @@ class MongoDB {
       tlsAllowInvalidCertificates: true, // For development, adjust for production
       retryWrites: true,
       serverSelectionTimeoutMS: 30000,
-      connectTimeoutMS: 30000,
-      socketTimeoutMS: 45000,
-      keepAlive: true,
-      maxPoolSize: 5
+      connectTimeoutMS: 30000
     };
     
     this.client = new MongoClient(process.env.MONGODB_URI, options);
