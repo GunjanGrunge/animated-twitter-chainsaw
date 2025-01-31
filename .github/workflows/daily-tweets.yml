@@ -34,10 +34,6 @@ jobs:
             echo "BATCH_START_TIME=1630" >> $GITHUB_ENV
           fi
 
-      - name: Setup MongoDB Certificate
-        run: |
-          wget https://s3.amazonaws.com/rds-downloads/rds-combined-ca-bundle.pem -O rootCA.pem
-        
       - name: Generate schedule
         run: node generateSchedule.js
         env:

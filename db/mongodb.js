@@ -3,14 +3,13 @@ const { MongoClient } = require('mongodb');
 class MongoDB {
   constructor() {
     const options = {
-      ssl: true,
-      tls: true,
-      tlsCAFile: require('path').join(__dirname, '../rootCA.pem'),
       serverSelectionTimeoutMS: 5000,
-      connectTimeoutMS: 30000
+      directConnection: false,
+      retryWrites: true,
+      retryReads: true
     };
     
-    console.log('MongoDB Options:', options);
+    console.log('Initializing MongoDB connection...');
     this.client = new MongoClient(process.env.MONGODB_URI, options);
     this.db = null;
   }
@@ -26,15 +25,19 @@ class MongoDB {
         await this.db.command({ ping: 1 });
         console.log('Successfully connected to MongoDB');
       } catch (pingError) {
-        console.error('Ping failed:', pingError);
+        console.error('Ping failed:', {
+          error: pingError.message,
+          code: pingError.code,
+          name: pingError.name
+        });
         throw pingError;
       }
     } catch (error) {
-      console.error('MongoDB connection error:', {
+      console.error('Detailed MongoDB connection error:', {
         message: error.message,
         code: error.code,
         name: error.name,
-        stack: error.stack
+        cause: error.cause ? error.cause.message : 'No cause specified'
       });
       throw error;
     }
