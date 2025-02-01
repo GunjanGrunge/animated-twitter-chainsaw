@@ -19,6 +19,69 @@ An automated Twitter bot that generates and posts diverse content using OpenAI G
   - Inspirational Messages
   - Bhagavad Gita Wisdom
 
+## 10-point explanation of how the automated Twitter bot works:
+
+- Scheduling:
+
+Runs twice daily (8:30 AM & 4:30 PM IST)
+Uses GitHub Actions for automation
+Posts 4 tweets per session, 30 minutes apart
+
+-Content Generation:
+
+Uses OpenAI GPT-4 to generate unique tweets
+Has 5 categories: Poems, Motivational, Jokes, Inspirational, Geeta wisdom
+Each session uses different categories to ensure variety
+Duplicate Prevention:
+
+Stores tweet history in tweetHistory.json
+Checks similarity with past 90 days of tweets
+Makes up to 13 attempts to generate unique content
+
+-Workflow Process:
+
+Generates schedule (tweetSchedule.json)
+Saves history (tweetHistory.json)
+Posts tweets with delays
+Commits changes to GitHub
+
+-Tweet Processing:
+
+Removes hashtags, quotes, and emojis
+Ensures 280 character limit
+Formats content for readability
+
+-History Management:
+
+90-day rolling window
+70% similarity threshold
+Automatic cleanup of old tweets
+
+-Error Handling:
+
+Validates environment variables
+Verifies Twitter credentials
+Handles API failures gracefully
+
+-File Management:
+
+Schedule file for current session
+History file for past tweets
+Both files tracked in git
+
+-Environment Setup:
+
+Uses .env for local development
+Uses GitHub Secrets for production
+Manages API keys securely
+
+-Session Coordination:
+
+Morning/Evening session detection
+Time-based tweet scheduling
+Automatic timezone handling
+This creates a fully automated system that generates and posts unique, varied content while maintaining a history to prevent repetition.
+
 ## Tech Stack
 
 - Node.js
