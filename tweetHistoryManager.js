@@ -22,7 +22,12 @@ class TweetHistoryManager {
   }
 
   async saveHistory(history) {
+    console.log('Saving tweet history:', {
+      location: this.historyFile,
+      tweetCount: history.tweets.length
+    });
     await fs.writeFile(this.historyFile, JSON.stringify(history, null, 2));
+    console.log('Tweet history saved successfully');
   }
 
   async saveTweet(tweet) {
