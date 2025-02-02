@@ -36,9 +36,9 @@ async function verifyTwitterCredentials() {
 
 const TWEET_CATEGORIES = {
   POEM: "Write a short, emotional poem or Hindi shayari about love, life, or struggle in under 280 characters.",
-  MOTIVATIONAL: "Create an original, powerful motivational quote under 280 characters.",
+  MOTIVATIONAL: "Create a powerful motivational message that inspires action and determination. Use diverse sentence structures - mix short punchy statements with eloquent metaphors. Avoid clichés and common phrases like 'you can do it' or 'never give up'. Instead, use fresh perspectives, unexpected analogies, or storytelling elements. Focus on themes like growth, courage, persistence, or innovation. Keep it under 280 characters and make it memorable.",
   JOKE: "Craft a clever joke with brilliant wordplay, puns, or double meanings that is funny, witty in under 280 characters.",
-  INSPIRATIONAL: "Generate an original inspirational quote about personal growth in under 280 characters.",
+  INSPIRATIONAL: "Create a unique and powerful inspirational message about personal growth, resilience, or self-discovery. Be creative with different openings - avoid starting with 'Embrace'. Mix metaphors, use varied narrative voices, and explore different emotional tones while staying authentic and meaningful. Keep it under 280 characters.",
   GEETA: "Share profound life lessons and principles inspired by the wisdom of the Bhagavad Gita. Focus on teachings about self-discipline, resilience, karma, duty, detachment, and inner peace. Express the essence of these teachings in a relatable and practical way without directly quoting or referencing specific verses or figures in under 280 characters."
 };
 
