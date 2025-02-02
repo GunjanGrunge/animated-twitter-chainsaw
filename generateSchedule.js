@@ -63,6 +63,8 @@ async function generateTweet(category) {
   const maxAttempts = 13;  // We try 13 times before giving up
 
   while (attempts < maxAttempts) {
+    console.log(`\nAttempt ${attempts + 1}/${maxAttempts} for category ${category}`);
+    
     const completion = await openai.chat.completions.create({
       model: "gpt-4o",
       messages: [
@@ -93,16 +95,22 @@ async function generateTweet(category) {
 
     // Check for similar tweets
     const similarTweets = await tweetHistory.findSimilarTweets(tweet);
-    const isSimilar = similarTweets.some(oldTweet => {
-      const similarity = calculateSimilarity(oldTweet.content, tweet);
-      return similarity > 0.7; // 70% similarity threshold
-    });
-
-    if (!isSimilar) {
-      return tweet;
+    console.log(`Found ${similarTweets.length} similar tweets`);
+    
+    if (similarTweets.length > 0) {
+      console.log('Similar tweets found:');
+      similarTweets.forEach((oldTweet, index) => {
+        console.log(`\n${index + 1}. Old tweet (${oldTweet.category}, ${oldTweet.createdAt}):`);
+        console.log(oldTweet.content);
+        const similarity = calculateSimilarity(oldTweet.content, tweet);
+        console.log(`Similarity score: ${(similarity * 100).toFixed(2)}%`);
+      });
+      attempts++;
+      continue;
     }
 
-    attempts++;
+    console.log('Unique tweet generated successfully');
+    return tweet;
   }
 
   throw new Error('Could not generate unique tweet after maximum attempts');

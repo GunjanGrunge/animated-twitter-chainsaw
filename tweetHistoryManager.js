@@ -22,12 +22,24 @@ class TweetHistoryManager {
   }
 
   async saveHistory(history) {
-    console.log('Saving tweet history:', {
-      location: this.historyFile,
-      tweetCount: history.tweets.length
-    });
-    await fs.writeFile(this.historyFile, JSON.stringify(history, null, 2));
-    console.log('Tweet history saved successfully');
+    try {
+      console.log('Saving tweet history:', {
+        location: this.historyFile,
+        tweetCount: history.tweets.length,
+        firstTweet: history.tweets[0]?.content.substring(0, 50),
+        lastTweet: history.tweets[history.tweets.length - 1]?.content.substring(0, 50)
+      });
+      
+      await fs.writeFile(this.historyFile, JSON.stringify(history, null, 2));
+      console.log('Tweet history saved successfully');
+      
+      // Verify the file was written
+      const stats = await fs.stat(this.historyFile);
+      console.log(`History file size: ${stats.size} bytes`);
+    } catch (error) {
+      console.error('Error saving history:', error);
+      throw error;
+    }
   }
 
   async saveTweet(tweet) {

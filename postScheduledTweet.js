@@ -36,7 +36,13 @@ async function postScheduledTweet(tweetIndex) {
     console.log(`Posting scheduled tweet for index ${tweetIndex}:`, tweet.content);
     
     const response = await twitterClient.v2.tweet(tweet.content);
+    console.log('Saving tweet to history...');
     await tweetHistory.saveTweet(tweet);
+    console.log('Tweet saved to history successfully');
+    
+    // Verify history was updated
+    const history = await tweetHistory.loadHistory();
+    console.log(`Current history count: ${history.length} tweets`);
     
     console.log('Tweet posted successfully:', response.data.id);
   } catch (error) {

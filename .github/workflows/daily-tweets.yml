@@ -34,6 +34,12 @@ jobs:
             echo "BATCH_START_TIME=1630" >> $GITHUB_ENV
           fi
 
+      - name: Initialize tweet history
+        run: |
+          if [ ! -f tweetHistory.json ]; then
+            echo '{"tweets":[]}' > tweetHistory.json
+          fi
+
       - name: Generate schedule
         env:
           OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
@@ -46,7 +52,7 @@ jobs:
           git config --local user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git config --local user.name "github-actions[bot]"
           git add tweetSchedule.json tweetHistory.json
-          git commit -m "Update tweet schedule and history for ${{ env.SESSION }} session" || echo "No changes to commit"
+          git diff-index --quiet HEAD || git commit -m "Update tweet schedule and history for ${{ env.SESSION }} session"
           git push origin ${GITHUB_REF#refs/heads/}
           
       - name: Post tweets sequentially
