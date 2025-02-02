@@ -70,7 +70,7 @@ async function generateTweet(category) {
       messages: [
         {
           role: "system",
-          content: "You are a tweet writer. Create ONE single tweet under 280 characters. No lists, no multiple versions. Be concise and direct."
+          content: "You are a tweet writer. Create ONE single tweet under 280 characters. Do not use hashtags, lists, or multiple versions. Be concise and direct."
         },
         {
           role: "user",
@@ -83,7 +83,7 @@ async function generateTweet(category) {
 
     let tweet = completion.choices[0].message.content
       .replace(/["'"]/g, '')
-      .replace(/#\w+/g, '')
+      .replace(/#[^\s#]+/g, '')  // Enhanced hashtag removal
       .replace(/\s+/g, ' ')
       .replace(/\d+\.\s/g, '')  // Remove numbered lists
       .trim();

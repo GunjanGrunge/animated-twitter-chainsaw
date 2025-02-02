@@ -73,7 +73,7 @@ async function generateAndPostTweet() {
       messages: [
         {
           role: "system",
-          content: `You are a tweet generator specializing in ${selectedCategory.toLowerCase()} content. Create engaging and authentic tweets. Do not use quotes, hashtags, or emojis. Keep it simple and direct.`
+          content: `You are a tweet generator specializing in ${selectedCategory.toLowerCase()} content. Create engaging and authentic tweets. Do not use hashtags, quotes, or emojis. Keep it simple and direct.`
         },
         {
           role: "user",
@@ -84,7 +84,7 @@ async function generateAndPostTweet() {
 
     let tweet = completion.choices[0].message.content
       .replace(/["'"]/g, '')
-      .replace(/#\w+/g, '')
+      .replace(/#[^\s#]+/g, '')  // Enhanced hashtag removal
       .replace(/\s+/g, ' ')
       .trim();
 
