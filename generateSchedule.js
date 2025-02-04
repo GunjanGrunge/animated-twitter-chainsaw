@@ -12,6 +12,10 @@ class TweetGenerator {
       throw new Error('OpenAI API key is required');
     }
 
+    if (!process.env.OPENAI_API_KEY.startsWith('sk-')) {
+      throw new Error('Invalid OpenAI API key format');
+    }
+
     this.openai = new OpenAI({
       apiKey: process.env.OPENAI_API_KEY,
       maxRetries: 5,
@@ -100,7 +104,7 @@ class TweetGenerator {
 
       try {
         const completion = await this.openai.chat.completions.create({
-          model: "gpt-4o",
+          model: "gpt-4",
           messages: [
             {
               role: "system",
