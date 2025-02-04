@@ -133,8 +133,7 @@ jobs:
       - name: Final commit
         if: always()
         run: |
-          git config --local user.email "github-actions[bot]@users.noreply.github.com"
-          git config --local user.name "github-actions[bot]"
-          git pull origin main
-          git add tweetHistory.json tweetSchedule.json
-          git diff-index --quiet HEAD || (git commit -m "Update tweet history and schedule" && git push)
+           git config --local user.email "github-actions[bot]@users.noreply.github.com"
+            git config --local user.name "github-actions[bot]"
+             git add tweetSchedule.json
+              git diff-index --quiet HEAD || (git commit -m "Generate tweet schedule" && git push)
