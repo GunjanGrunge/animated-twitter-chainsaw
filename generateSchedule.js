@@ -251,31 +251,51 @@ class TweetGenerator {
       
       logger.info('Starting schedule generation', { session });
 
-      // Generate tweets with individual error handling
+      // Generate random time slots with minimum 75-minute gaps
+      const timeSlots = [];
+      let lastTime = baseTime;
+      
+      for(let i = 0; i < 4; i++) {
+        // Random minutes between 75 and 120 minutes
+        const randomGap = Math.floor(Math.random() * (120 - 75 + 1) + 75);
+        const nextTime = lastTime + (randomGap * 60 * 1000);
+        timeSlots.push(nextTime);
+        lastTime = nextTime;
+        
+        logger.info('Generated time slot', { 
+          slot: i + 1, 
+          time: new Date(nextTime).toISOString(),
+          gapMinutes: randomGap 
+        });
+      }
+
+      // Generate tweets for each time slot
       for(let i = 0; i < 4; i++) {
         try {
-          const tweetTime = new Date(baseTime + (i * 30 * 60 * 1000));
           const selectedCategory = this.getRandomCategory(usedCategories);
           usedCategories.push(selectedCategory);
           
           const tweet = await this.generateTweet(selectedCategory);
           tweets.push({
-            scheduledTime: tweetTime.toISOString(),
+            scheduledTime: new Date(timeSlots[i]).toISOString(),
             content: tweet,
             category: selectedCategory,
             session: session,
             index: i,
-            status: 'pending'
+            status: 'pending',
+            gapToNext: i < 3 ? 
+              Math.floor((timeSlots[i + 1] - timeSlots[i]) / (60 * 1000)) : 
+              null
           });
 
           logger.info('Tweet scheduled', { 
             index: i, 
             category: selectedCategory, 
-            scheduledTime: tweetTime 
+            scheduledTime: new Date(timeSlots[i]).toISOString(),
+            gapToNextTweet: tweets[i].gapToNext
           });
         } catch (error) {
           logger.error(`Failed to generate tweet ${i + 1}`, { error: error.message });
-          // Continue with next tweet instead of failing completely
           continue;
         }
       }
@@ -287,6 +307,7 @@ class TweetGenerator {
       const schedule = {
         session,
         generatedAt: now.toISOString(),
+        totalDuration: Math.floor((timeSlots[3] - timeSlots[0]) / (60 * 1000)), // in minutes
         tweets
       };
 
@@ -297,7 +318,8 @@ class TweetGenerator {
 
       logger.info('Schedule generated successfully', { 
         tweetCount: tweets.length,
-        session 
+        session,
+        totalDuration: schedule.totalDuration
       });
 
       return tweets;

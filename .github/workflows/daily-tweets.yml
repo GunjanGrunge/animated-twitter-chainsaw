@@ -7,9 +7,9 @@ on:
   workflow_dispatch: # Allows manual trigger
 
 jobs:
-  generate-tweets:
+  generate-schedule:
     runs-on: ubuntu-latest
-    timeout-minutes: 15
+    timeout-minutes: 5  # Shorter timeout for schedule generation
 
     steps:
       - name: Checkout repository
@@ -50,6 +50,33 @@ jobs:
             fi
           done
 
+      - name: Commit schedule
+        run: |
+          git config --local user.email "github-actions[bot]@users.noreply.github.com"
+          git config --local user.name "github-actions[bot]"
+          git add tweetSchedule.json
+          git diff-index --quiet HEAD || (git commit -m "Generate tweet schedule" && git push)
+
+  post-tweets:
+    needs: generate-schedule
+    runs-on: ubuntu-latest
+    timeout-minutes: 120  # 2 hours to allow for tweet intervals
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '18'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm install
+
       - name: Post scheduled tweets
         env:
           TWITTER_API_KEY: ${{ secrets.TWITTER_API_KEY }}
@@ -58,8 +85,24 @@ jobs:
           TWITTER_ACCESS_TOKEN_SECRET: ${{ secrets.TWITTER_ACCESS_TOKEN_SECRET }}
         run: |
           failed_tweets=0
+          
           for i in {0..3}; do
             echo "Posting tweet $((i+1)) of 4..."
+            
+            # Pull latest changes before posting each tweet
+            git pull origin main
+            
+            # Load schedule and get wait time
+            if [ $i -lt 3 ]; then
+              wait_time=$(node -e "
+                const schedule = require('./tweetSchedule.json');
+                const tweet = schedule.tweets[$i];
+                const nextTweet = schedule.tweets[$i + 1];
+                const waitMinutes = Math.floor((new Date(nextTweet.scheduledTime) - new Date(tweet.scheduledTime)) / 60000);
+                console.log(waitMinutes * 60);  // Convert to seconds
+              ")
+            fi
+            
             if ! node postScheduledTweet.js $i; then
               echo "Warning: Failed to post tweet $((i+1))"
               ((failed_tweets++))
@@ -71,9 +114,13 @@ jobs:
               exit 1
             fi
             
+            # Commit history after each successful tweet
+            git add tweetHistory.json
+            git diff-index --quiet HEAD || (git commit -m "Update tweet history for tweet $((i+1))" && git push)
+            
             if [ $i -lt 3 ]; then
-              echo "Waiting 30 minutes before next tweet..."
-              sleep 1800
+              echo "Waiting ${wait_time} seconds before next tweet..."
+              sleep $wait_time
             fi
           done
           
@@ -83,10 +130,11 @@ jobs:
           fi
           exit 0
 
-      - name: Commit changes
-        if: always()  # Run even if some tweets failed
+      - name: Final commit
+        if: always()
         run: |
           git config --local user.email "github-actions[bot]@users.noreply.github.com"
           git config --local user.name "github-actions[bot]"
+          git pull origin main
           git add tweetHistory.json tweetSchedule.json
           git diff-index --quiet HEAD || (git commit -m "Update tweet history and schedule" && git push)
