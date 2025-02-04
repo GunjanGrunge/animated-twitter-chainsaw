@@ -19,9 +19,7 @@ class TweetGenerator {
     this.openai = new OpenAI({
       apiKey: process.env.OPENAI_API_KEY,
       maxRetries: 5,
-      timeout: 30000,
-      defaultQuery: { timeout: 30000 },
-      defaultHeaders: { 'OpenAI-Beta': 'assistants=v1' }
+      timeout: 30000  // This is for the HTTP client timeout
     });
 
     this.sleep = (ms) => new Promise(resolve => setTimeout(resolve, ms));
@@ -118,8 +116,7 @@ class TweetGenerator {
           temperature: 0.9,
           presence_penalty: 0.8,
           frequency_penalty: 0.9,
-          max_tokens: 100,
-          timeout: 30000
+          max_tokens: 100
         });
 
         let tweet = completion.choices[0].message.content
