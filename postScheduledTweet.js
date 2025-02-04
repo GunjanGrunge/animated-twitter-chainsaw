@@ -89,48 +89,81 @@ class TweetPoster {
     try {
       logger.info('Starting scheduled tweet posting', { tweetIndex });
 
-      // Verify credentials first
-      const credentialsValid = await this.verifyCredentials();
-      if (!credentialsValid) {
-        throw new Error('Twitter credentials verification failed');
-      }
-
-      // Load and validate schedule
+      // Load and validate schedule first
       const schedule = await this.loadSchedule();
       if (!schedule.tweets || !schedule.tweets[tweetIndex]) {
-        throw new Error(`No tweet found for index: ${tweetIndex}`);
+        logger.error('Invalid schedule or tweet index', { 
+          tweetIndex,
+          scheduleExists: !!schedule,
+          tweetsExist: !!schedule?.tweets
+        });
+        // Instead of failing, we'll skip this tweet
+        return null;
       }
 
       const tweet = schedule.tweets[tweetIndex];
       
-      // Verify tweet timing
-      const scheduledTime = new Date(tweet.scheduledTime);
-      const now = new Date();
-      const timeDiff = Math.abs(now - scheduledTime);
-      
-      if (timeDiff > 5 * 60 * 1000) { // 5 minutes window
-        logger.warn('Tweet outside scheduled window', {
-          scheduled: scheduledTime,
-          current: now
-        });
+      // Validate tweet format
+      if (!this.validateTweet(tweet)) {
+        logger.error('Invalid tweet format, regenerating tweet', { tweet });
+        // Try to regenerate the tweet
+        const generator = require('./generateSchedule');
+        try {
+          const newTweet = await generator.generateTweet(tweet.category);
+          tweet.content = newTweet;
+          // Update schedule with new tweet
+          await this.updateSchedule(schedule);
+        } catch (error) {
+          logger.error('Failed to regenerate tweet', { error: error.message });
+          // Skip this tweet instead of failing
+          return null;
+        }
       }
 
-      // Post tweet
-      const response = await this.postTweet(tweet);
-      
-      // Update tweet status in schedule
-      schedule.tweets[tweetIndex].status = 'completed';
-      schedule.tweets[tweetIndex].postedAt = new Date().toISOString();
-      schedule.tweets[tweetIndex].tweetId = response.data.id;
-      await this.updateSchedule(schedule);
+      // Verify credentials
+      const credentialsValid = await this.verifyCredentials();
+      if (!credentialsValid) {
+        logger.error('Twitter credentials verification failed');
+        // Skip this tweet instead of failing
+        return null;
+      }
 
-      // Save to history
-      await tweetHistory.saveTweet(tweet);
+      // Post tweet with retries
+      let response;
+      const maxRetries = 3;
+      for (let attempt = 1; attempt <= maxRetries; attempt++) {
+        try {
+          response = await this.postTweet(tweet);
+          break;
+        } catch (error) {
+          if (attempt === maxRetries) {
+            logger.error('Failed to post tweet after retries', { 
+              error: error.message,
+              attempts: attempt 
+            });
+            // Skip this tweet instead of failing
+            return null;
+          }
+          logger.warn(`Retry attempt ${attempt} of ${maxRetries}`);
+          await new Promise(resolve => setTimeout(resolve, 5000 * attempt));
+        }
+      }
 
-      logger.info('Scheduled tweet posted successfully', {
-        index: tweetIndex,
-        tweetId: response.data.id
-      });
+      if (response) {
+        // Update tweet status
+        schedule.tweets[tweetIndex].status = 'completed';
+        schedule.tweets[tweetIndex].postedAt = new Date().toISOString();
+        schedule.tweets[tweetIndex].tweetId = response.data.id;
+        await this.updateSchedule(schedule);
+
+        // Save to history only if successfully posted
+        await tweetHistory.saveTweet(tweet);
+
+        logger.info('Tweet posted successfully', {
+          index: tweetIndex,
+          tweetId: response.data.id
+        });
+      }
 
       return response;
 
@@ -139,8 +172,20 @@ class TweetPoster {
         error: error.message,
         tweetIndex
       });
-      throw error;
+      // Return null instead of throwing
+      return null;
     }
+  }
+
+  validateTweet(tweet) {
+    return tweet 
+      && typeof tweet === 'object'
+      && typeof tweet.content === 'string'
+      && tweet.content.length > 0
+      && tweet.content.length <= 280
+      && typeof tweet.category === 'string'
+      && tweet.scheduledTime
+      && !isNaN(new Date(tweet.scheduledTime).getTime());
   }
 }
 
