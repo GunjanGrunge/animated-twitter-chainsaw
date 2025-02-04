@@ -1,0 +1,61 @@
+name: Post Single Tweet
+
+on:
+  workflow_dispatch:
+    inputs:
+      scheduled_time:
+        required: true
+        type: string
+      tweet_index:
+        required: true
+        type: string
+
+permissions:
+  contents: write
+
+jobs:
+  post-tweet:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+
+      - name: Check schedule time
+        id: check-time
+        run: |
+          scheduled_time="${{ github.event.inputs.scheduled_time }}"
+          current_time=$(date -u +"%Y-%m-%dT%H:%M:%SZ")
+          
+          if [[ "$scheduled_time" > "$current_time" ]]; then
+            echo "Waiting for scheduled time..."
+            sleep $(( $(date -d "$scheduled_time" +%s) - $(date -u +%s) ))
+          fi
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '18'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Post tweet
+        env:
+          TWITTER_API_KEY: ${{ secrets.TWITTER_API_KEY }}
+          TWITTER_API_SECRET: ${{ secrets.TWITTER_API_SECRET }}
+          TWITTER_ACCESS_TOKEN: ${{ secrets.TWITTER_ACCESS_TOKEN }}
+          TWITTER_ACCESS_TOKEN_SECRET: ${{ secrets.TWITTER_ACCESS_TOKEN_SECRET }}
+        run: |
+          node postScheduledTweet.js ${{ github.event.inputs.tweet_index }}
+
+      - name: Update repository
+        run: |
+          git config --local user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git config --local user.name "github-actions[bot]"
+          git pull --rebase origin main
+          git add tweetHistory.json tweetSchedule.json
+          git commit -m "Posted tweet ${{ github.event.inputs.tweet_index }}"
+          git push

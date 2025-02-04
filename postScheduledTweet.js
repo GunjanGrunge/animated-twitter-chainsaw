@@ -90,67 +90,125 @@ class TweetPoster {
   }
 
   async postTweet(tweet) {
-    try {
-      const response = await this.twitterClient.v2.tweet(tweet.content);
-      logger.info('Tweet posted successfully', { 
-        tweetId: response.data.id,
-        category: tweet.category 
-      });
-      return response;
-    } catch (error) {
-      logger.error('Error posting tweet', { 
-        error: error.message,
-        tweet: tweet.content 
-      });
-      throw error;
+    const maxRetries = 3;
+    const baseDelay = 5000; // 5 seconds
+
+    for (let attempt = 0; attempt < maxRetries; attempt++) {
+      try {
+        // Add rate limit check
+        await this.checkRateLimit();
+        
+        const response = await this.twitterClient.v2.tweet(tweet.content);
+        logger.info('Tweet posted successfully', { 
+          tweetId: response.data.id,
+          category: tweet.category,
+          attempt: attempt + 1
+        });
+        return response;
+      } catch (error) {
+        const isRateLimit = error.code === 429 || error.message.includes('rate limit');
+        const delay = isRateLimit ? 15 * 60 * 1000 : baseDelay * Math.pow(2, attempt);
+        
+        logger.warn('Tweet posting failed', {
+          attempt: attempt + 1,
+          error: error.message,
+          isRateLimit,
+          nextRetryDelay: delay
+        });
+
+        if (attempt < maxRetries - 1) {
+          await this.sleep(delay);
+          continue;
+        }
+        throw error;
+      }
     }
   }
 
-  async postScheduledTweet(tweetIndex) {
+  async checkRateLimit() {
     try {
-      logger.info('Starting scheduled tweet posting', { tweetIndex });
-
-      const schedule = await this.loadSchedule();
-      if (!schedule.tweets || !schedule.tweets[tweetIndex]) {
-        throw new Error('Invalid schedule or tweet index');
-      }
-
-      const tweet = schedule.tweets[tweetIndex];
+      const limits = await this.twitterClient.v2.rateLimitStatus();
+      const tweetsEndpoint = '/2/tweets';
+      const tweetsRemaining = limits?.data?.resources?.tweets?.[tweetsEndpoint]?.remaining;
       
-      // Verify credentials
-      await this.verifyCredentials();
-
-      // Post tweet
-      const response = await this.postTweet(tweet);
-      
-      if (response) {
-        // Update tweet with response data
-        tweet.tweetId = response.data.id;
-        tweet.status = 'completed';
-        tweet.postedAt = new Date().toISOString();
+      if (tweetsRemaining && tweetsRemaining < 2) {
+        const resetTime = limits.data.resources.tweets[tweetsEndpoint].reset * 1000;
+        const waitTime = resetTime - Date.now() + 1000; // Add 1 second buffer
         
-        // Update schedule
-        await this.updateSchedule(schedule);
-        
-        // Save to history
-        await saveTweet(tweet);
-        
-        logger.info('Tweet posted and saved successfully', {
-          tweetId: response.data.id,
-          index: tweetIndex
-        });
-        
-        return response;
+        if (waitTime > 0) {
+          logger.warn('Rate limit nearly exceeded, waiting for reset', {
+            tweetsRemaining,
+            waitTimeSeconds: Math.ceil(waitTime / 1000)
+          });
+          await this.sleep(waitTime);
+        }
       }
-
-      throw new Error('No response from Twitter API');
-
     } catch (error) {
-      logger.error('Failed to post scheduled tweet', {
-        error: error.message,
-        tweetIndex
-      });
-      return null;
+      logger.warn('Rate limit check failed', { error: error.message });
+    }
+  }
+
+  sleep(ms) {
+    return new Promise(resolve => setTimeout(resolve, ms));
+  }
+
+  async postScheduledTweet(tweetIndex) {
+    const maxAttempts = 3;
+    
+    for (let attempt = 0; attempt < maxAttempts; attempt++) {
+      try {
+        logger.info('Starting scheduled tweet posting', { tweetIndex, attempt: attempt + 1 });
+
+        const schedule = await this.loadSchedule();
+        if (!schedule.tweets || !schedule.tweets[tweetIndex]) {
+          throw new Error('Invalid schedule or tweet index');
+        }
+
+        const tweet = schedule.tweets[tweetIndex];
+        
+        // Verify credentials before each attempt
+        const credentialsValid = await this.verifyCredentials();
+        if (!credentialsValid) {
+          throw new Error('Twitter credentials verification failed');
+        }
+
+        const response = await this.postTweet(tweet);
+        
+        if (response) {
+          tweet.tweetId = response.data.id;
+          tweet.status = 'completed';
+          tweet.postedAt = new Date().toISOString();
+          tweet.attempts = attempt + 1;
+          
+          await this.updateSchedule(schedule);
+          await saveTweet(tweet);
+          
+          logger.info('Tweet posted and saved successfully', {
+            tweetId: response.data.id,
+            index: tweetIndex,
+            attempts: attempt + 1
+          });
+          
+          return response;
+        }
+
+        throw new Error('No response from Twitter API');
+
+      } catch (error) {
+        logger.error('Failed to post scheduled tweet', {
+          error: error.message,
+          tweetIndex,
+          attempt: attempt + 1
+        });
+
+        if (attempt < maxAttempts - 1) {
+          const delay = 5000 * Math.pow(2, attempt); // Exponential backoff
+          logger.info(`Retrying in ${delay/1000} seconds...`);
+          await this.sleep(delay);
+          continue;
+        }
+        return null;
+      }
     }
   }
 

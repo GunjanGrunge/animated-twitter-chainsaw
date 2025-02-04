@@ -1,0 +1,71 @@
+name: Generate Daily Tweet Schedule
+
+on:
+  schedule:
+    # Runs twice daily at 8:30 AM and 4:30 PM IST (3:00 AM and 11:00 AM UTC)
+    - cron: '0 3,11 * * *'  # Keeping the same schedule as before
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  actions: write
+
+jobs:
+  generate-schedule:
+    runs-on: ubuntu-latest
+    outputs:
+      schedule_times: ${{ steps.create-schedule.outputs.schedule_times }}
+
+    steps:
+      - uses: actions/checkout@v3
+      
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '18'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Generate tweet schedule
+        id: create-schedule
+        env:
+          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+        run: |
+          node generateSchedule.js
+          
+          # Extract scheduled times and create workflow dispatch events
+          schedule_times=$(node -e '
+            const schedule = require("./tweetSchedule.json");
+            const times = schedule.tweets.map((t, i) => ({
+              time: new Date(t.scheduledTime),
+              index: i
+            }));
+            console.log(JSON.stringify(times));
+          ')
+          echo "schedule_times=${schedule_times}" >> $GITHUB_OUTPUT
+
+      - name: Schedule tweet posts
+        run: |
+          schedule_times='${{ steps.create-schedule.outputs.schedule_times }}'
+          
+          echo "$schedule_times" | jq -c '.[]' | while read -r item; do
+            scheduled_time=$(echo $item | jq -r '.time')
+            tweet_index=$(echo $item | jq -r '.index')
+            
+            # Create workflow dispatch event for each tweet
+            gh workflow run post-single-tweet.yml \
+              -f scheduled_time="$scheduled_time" \
+              -f tweet_index="$tweet_index"
+          done
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Commit schedule
+        run: |
+          git config --local user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git config --local user.name "github-actions[bot]"
+          git add tweetSchedule.json
+          git commit -m "Generate tweet schedule for $(date +'%Y-%m-%d')"
+          git push
