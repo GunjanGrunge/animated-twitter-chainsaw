@@ -13,8 +13,14 @@ class TweetGenerator {
     }
 
     this.openai = new OpenAI({
-      apiKey: process.env.OPENAI_API_KEY
+      apiKey: process.env.OPENAI_API_KEY,
+      maxRetries: 5,
+      timeout: 30000,
+      defaultQuery: { timeout: 30000 },
+      defaultHeaders: { 'OpenAI-Beta': 'assistants=v1' }
     });
+
+    this.sleep = (ms) => new Promise(resolve => setTimeout(resolve, ms));
 
     this.TWEET_CATEGORIES = {
       POEM: "Write a unique, emotional poem or Hindi shayari about love, life, or struggle. Be creative and avoid common phrases. Use metaphors and fresh perspectives. Each line should paint a vivid picture. Keep it under 280 characters.",
@@ -38,7 +44,9 @@ class TweetGenerator {
   }
 
   async generateTweet(category, retryCount = 0) {
-    const maxRetries = 3;
+    const maxRetries = 5;
+    const baseDelay = 1000;
+
     try {
       logger.info('Generating tweet', { category, attempt: retryCount + 1 });
 
@@ -90,72 +98,91 @@ class TweetGenerator {
         - Avoid overused metaphors
         - Keep it concise but impactful`;
 
-      const completion = await this.openai.chat.completions.create({
-        model: "gpt-4",
-        messages: [
-          {
-            role: "system",
-            content: systemPrompt
-          },
-          {
-            role: "user",
-            content: `${this.TWEET_CATEGORIES[category]} Style: ${style}, Focus: ${secondaryElement}, Approach: ${approach}`
-          }
-        ],
-        temperature: 0.9,
-        presence_penalty: 0.8,  // Increased to further reduce repetition
-        frequency_penalty: 0.9,  // Increased to encourage more unique word choices
-        max_tokens: 100
-      });
-
-      let tweet = completion.choices[0].message.content
-        .replace(/["'"]/g, '')
-        .replace(/#[^\s#]+/g, '')
-        .replace(/\s+/g, ' ')
-        .replace(/\d+\.\s/g, '')
-        .trim();
-
-      // Ensure tweet length
-      if (tweet.length > 280) {
-        tweet = tweet.substring(0, 277) + "...";
-      }
-
-      // Additional validation for creativity
-      const creativityChecks = {
-        hasCommonPhrases: this.checkCommonPhrases(tweet),
-        hasRepetitiveStructure: this.checkRepetitiveStructure(tweet),
-        meetsStyleCriteria: this.checkStyleCriteria(tweet, style, category)
-      };
-
-      if (Object.values(creativityChecks).some(check => !check)) {
-        logger.warn('Tweet failed creativity checks', { creativityChecks });
-        if (retryCount < maxRetries) {
-          return this.generateTweet(category, retryCount + 1);
-        }
-      }
-
-      // Check for similar tweets with stricter threshold
-      const similarTweets = await tweetHistory.findSimilarTweets(tweet, 0.6); // Lower threshold for stricter uniqueness
-      if (similarTweets.length > 0) {
-        logger.warn('Similar tweet found', { 
-          tweet, 
-          similarCount: similarTweets.length 
+      try {
+        const completion = await this.openai.chat.completions.create({
+          model: "gpt-4o",
+          messages: [
+            {
+              role: "system",
+              content: systemPrompt
+            },
+            {
+              role: "user",
+              content: `${this.TWEET_CATEGORIES[category]} Style: ${style}, Focus: ${secondaryElement}, Approach: ${approach}`
+            }
+          ],
+          temperature: 0.9,
+          presence_penalty: 0.8,
+          frequency_penalty: 0.9,
+          max_tokens: 100,
+          timeout: 30000
         });
-        
+
+        let tweet = completion.choices[0].message.content
+          .replace(/["'"]/g, '')
+          .replace(/#[^\s#]+/g, '')
+          .replace(/\s+/g, ' ')
+          .replace(/\d+\.\s/g, '')
+          .trim();
+
+        // Ensure tweet length
+        if (tweet.length > 280) {
+          tweet = tweet.substring(0, 277) + "...";
+        }
+
+        // Additional validation for creativity
+        const creativityChecks = {
+          hasCommonPhrases: this.checkCommonPhrases(tweet),
+          hasRepetitiveStructure: this.checkRepetitiveStructure(tweet),
+          meetsStyleCriteria: this.checkStyleCriteria(tweet, style, category)
+        };
+
+        if (Object.values(creativityChecks).some(check => !check)) {
+          logger.warn('Tweet failed creativity checks', { creativityChecks });
+          if (retryCount < maxRetries) {
+            return this.generateTweet(category, retryCount + 1);
+          }
+        }
+
+        // Check for similar tweets with stricter threshold
+        const similarTweets = await tweetHistory.findSimilarTweets(tweet, 0.6); // Lower threshold for stricter uniqueness
+        if (similarTweets.length > 0) {
+          logger.warn('Similar tweet found', { 
+            tweet, 
+            similarCount: similarTweets.length 
+          });
+          
+          if (retryCount < maxRetries) {
+            return this.generateTweet(category, retryCount + 1);
+          }
+          throw new Error('Could not generate unique tweet after max retries');
+        }
+
+        logger.info('Tweet generated successfully', { 
+          category, 
+          tweet,
+          style,
+          approach,
+          secondaryElement
+        });
+        return tweet;
+
+      } catch (error) {
+        // Handle API-specific errors
+        const delay = baseDelay * Math.pow(2, retryCount);
+        logger.warn(`API call failed, retrying in ${delay}ms`, { 
+          error: error.message, 
+          retryCount,
+          delay 
+        });
+
         if (retryCount < maxRetries) {
+          await this.sleep(delay);
           return this.generateTweet(category, retryCount + 1);
         }
-        throw new Error('Could not generate unique tweet after max retries');
-      }
 
-      logger.info('Tweet generated successfully', { 
-        category, 
-        tweet,
-        style,
-        approach,
-        secondaryElement
-      });
-      return tweet;
+        throw new Error(`Failed to generate tweet after ${maxRetries} retries: ${error.message}`);
+      }
 
     } catch (error) {
       logger.error('Error generating tweet', { 
@@ -165,7 +192,9 @@ class TweetGenerator {
       });
 
       if (retryCount < maxRetries) {
-        logger.info('Retrying tweet generation');
+        const delay = baseDelay * Math.pow(2, retryCount);
+        logger.info(`Retrying tweet generation in ${delay}ms`);
+        await this.sleep(delay);
         return this.generateTweet(category, retryCount + 1);
       }
       throw error;
@@ -221,27 +250,37 @@ class TweetGenerator {
       
       logger.info('Starting schedule generation', { session });
 
-      // Generate 4 tweets per session
+      // Generate tweets with individual error handling
       for(let i = 0; i < 4; i++) {
-        const tweetTime = new Date(baseTime + (i * 30 * 60 * 1000));
-        const selectedCategory = this.getRandomCategory(usedCategories);
-        usedCategories.push(selectedCategory);
-        
-        const tweet = await this.generateTweet(selectedCategory);
-        tweets.push({
-          scheduledTime: tweetTime.toISOString(),
-          content: tweet,
-          category: selectedCategory,
-          session: session,
-          index: i,
-          status: 'pending'
-        });
+        try {
+          const tweetTime = new Date(baseTime + (i * 30 * 60 * 1000));
+          const selectedCategory = this.getRandomCategory(usedCategories);
+          usedCategories.push(selectedCategory);
+          
+          const tweet = await this.generateTweet(selectedCategory);
+          tweets.push({
+            scheduledTime: tweetTime.toISOString(),
+            content: tweet,
+            category: selectedCategory,
+            session: session,
+            index: i,
+            status: 'pending'
+          });
 
-        logger.info('Tweet scheduled', { 
-          index: i, 
-          category: selectedCategory, 
-          scheduledTime: tweetTime 
-        });
+          logger.info('Tweet scheduled', { 
+            index: i, 
+            category: selectedCategory, 
+            scheduledTime: tweetTime 
+          });
+        } catch (error) {
+          logger.error(`Failed to generate tweet ${i + 1}`, { error: error.message });
+          // Continue with next tweet instead of failing completely
+          continue;
+        }
+      }
+
+      if (tweets.length === 0) {
+        throw new Error('Failed to generate any tweets');
       }
 
       const schedule = {

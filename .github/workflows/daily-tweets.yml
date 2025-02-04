@@ -30,7 +30,25 @@ jobs:
         env:
           OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
           SESSION: ${{ github.event.schedule == '0 3 * * *' && 'morning' || 'evening' }}
-        run: node generateSchedule.js
+        run: |
+          max_attempts=3
+          attempt=1
+          
+          while [ $attempt -le $max_attempts ]; do
+            echo "Attempt $attempt of $max_attempts to generate schedule"
+            if node generateSchedule.js; then
+              echo "Schedule generated successfully"
+              break
+            else
+              if [ $attempt -eq $max_attempts ]; then
+                echo "Failed to generate schedule after $max_attempts attempts"
+                exit 1
+              fi
+              echo "Waiting before retry..."
+              sleep 30
+              ((attempt++))
+            fi
+          done
 
       - name: Post scheduled tweets
         env:
