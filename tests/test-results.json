@@ -1,0 +1,369 @@
+{
+  "timestamp": "2025-02-04T06:32:06.525Z",
+  "tests": [
+    {
+      "category": "POEM",
+      "tweets": [
+        {
+          "content": "In the symphony of twilight, love strums a gentle lullaby. Crimson hopes blossom on the canvas of your eyes, painting dreams in stardust hues. Our hearts play hide and seek with tomorrows sunrise, yearning for an endless dance beneath the soft-spoken cosmos.",
+          "analysis": {
+            "length": 258,
+            "wordCount": 42,
+            "hasCommonPhrases": false,
+            "hasRepetitiveStructure": false,
+            "meetsStyleCriteria": true,
+            "characteristics": {
+              "hasMetaphors": true,
+              "hasEmotionalWords": true,
+              "hasActionWords": true,
+              "hasUniquePhrasing": true,
+              "complexity": {
+                "avgWordLength": 5.166666666666667,
+                "hasComplexStructure": true,
+                "sentenceVariety": true
+              },
+              "hasPoetryElements": true
+            },
+            "score": 100
+          }
+        },
+        {
+          "content": "Whispers of yesteryears echo in hearts corridors, painting murals of golden sunsets on the canvas of time. Weaving tales in a loom of dreams, tomorrow yet waits patiently with hope poised by its side; an ode to resilience written with quill dipped in dawns first light.",
+          "analysis": {
+            "length": 269,
+            "wordCount": 46,
+            "hasCommonPhrases": false,
+            "hasRepetitiveStructure": false,
+            "meetsStyleCriteria": true,
+            "characteristics": {
+              "hasMetaphors": true,
+              "hasEmotionalWords": true,
+              "hasActionWords": true,
+              "hasUniquePhrasing": true,
+              "complexity": {
+                "avgWordLength": 4.869565217391305,
+                "hasComplexStructure": true,
+                "sentenceVariety": true
+              },
+              "hasPoetryElements": true
+            },
+            "score": 90
+          }
+        },
+        {
+          "content": "Beneath the verdant canopy, whispers of wind weave tales of longing between leaves. Veins filled with sap yearn for vanished rainfall, echoing an ache as ancient, as dappled sunlight filtering through a forests unfulfilled dreams.",
+          "analysis": {
+            "length": 230,
+            "wordCount": 35,
+            "hasCommonPhrases": false,
+            "hasRepetitiveStructure": false,
+            "meetsStyleCriteria": true,
+            "characteristics": {
+              "hasMetaphors": true,
+              "hasEmotionalWords": true,
+              "hasActionWords": true,
+              "hasUniquePhrasing": true,
+              "complexity": {
+                "avgWordLength": 5.6,
+                "hasComplexStructure": true,
+                "sentenceVariety": true
+              },
+              "hasPoetryElements": true
+            },
+            "score": 100
+          }
+        }
+      ]
+    },
+    {
+      "category": "MOTIVATIONAL",
+      "tweets": [
+        {
+          "content": "Just as the silent glacier carves landscapes, let your quiet determination sculpt new possibilities. Innovation isnt always a thunderclap under bright skies; sometimes its the relentless whisper of change in the frosty twilight.",
+          "analysis": {
+            "length": 228,
+            "wordCount": 33,
+            "hasCommonPhrases": false,
+            "hasRepetitiveStructure": false,
+            "meetsStyleCriteria": false,
+            "characteristics": {
+              "hasMetaphors": true,
+              "hasEmotionalWords": false,
+              "hasActionWords": false,
+              "hasUniquePhrasing": false,
+              "complexity": {
+                "avgWordLength": 5.9393939393939394,
+                "hasComplexStructure": true,
+                "sentenceVariety": true
+              }
+            },
+            "score": 75
+          }
+        },
+        {
+          "content": "In the silent whispers of a forgotten forest, even a fallen leaf finds its purpose, morphs into nourishment and rebirth. So can you. Every stumble is not an end but alchemy in progress; your yesterday’s downfall, todays fertile ground for growth. Explore within, ignite unchart...",
+          "analysis": {
+            "length": 280,
+            "wordCount": 45,
+            "hasCommonPhrases": false,
+            "hasRepetitiveStructure": false,
+            "meetsStyleCriteria": true,
+            "characteristics": {
+              "hasMetaphors": false,
+              "hasEmotionalWords": false,
+              "hasActionWords": true,
+              "hasUniquePhrasing": false,
+              "complexity": {
+                "avgWordLength": 5.2444444444444445,
+                "hasComplexStructure": true,
+                "sentenceVariety": true
+              }
+            },
+            "score": 80
+          }
+        },
+        {
+          "content": "In every dewdrop, sits the promise of a new dawn. Innovation isnt a switch to flip but rather, its the relentless pursuit of sunrise after each dusk. Weld your tomorrow in the forge of today. Begin now; because time is an artist whose canvas doesnt wait for idle brushes.",
+          "analysis": {
+            "length": 271,
+            "wordCount": 49,
+            "hasCommonPhrases": false,
+            "hasRepetitiveStructure": false,
+            "meetsStyleCriteria": true,
+            "characteristics": {
+              "hasMetaphors": true,
+              "hasEmotionalWords": false,
+              "hasActionWords": true,
+              "hasUniquePhrasing": false,
+              "complexity": {
+                "avgWordLength": 4.551020408163265,
+                "hasComplexStructure": true,
+                "sentenceVariety": true
+              }
+            },
+            "score": 80
+          }
+        }
+      ]
+    },
+    {
+      "category": "JOKE",
+      "tweets": [
+        {
+          "content": "Revealed to my significant other that Ive been secretly moonlighting as a locksmith. Her response? At last, a relationship where someones committed to finding the key to my heart.",
+          "analysis": {
+            "length": 179,
+            "wordCount": 29,
+            "hasCommonPhrases": false,
+            "hasRepetitiveStructure": false,
+            "meetsStyleCriteria": true,
+            "characteristics": {
+              "hasMetaphors": true,
+              "hasEmotionalWords": true,
+              "hasActionWords": true,
+              "hasUniquePhrasing": true,
+              "complexity": {
+                "avgWordLength": 5.206896551724138,
+                "hasComplexStructure": true,
+                "sentenceVariety": true
+              },
+              "hasPunchline": true
+            },
+            "score": 100
+          }
+        },
+        {
+          "content": "Why dont computers ever get tired? Because they have Windows, but never need to sleep. They do enjoy using their chips to snack on bites of data all night though!",
+          "analysis": {
+            "length": 162,
+            "wordCount": 30,
+            "hasCommonPhrases": false,
+            "hasRepetitiveStructure": false,
+            "meetsStyleCriteria": true,
+            "characteristics": {
+              "hasMetaphors": false,
+              "hasEmotionalWords": false,
+              "hasActionWords": false,
+              "hasUniquePhrasing": false,
+              "complexity": {
+                "avgWordLength": 4.433333333333334,
+                "hasComplexStructure": true,
+                "sentenceVariety": true
+              },
+              "hasPunchline": true
+            },
+            "score": 90
+          }
+        },
+        {
+          "content": "Ever notice how laptops at work are like chameleons on a tropical vacation? Theyre hot, never blend in, and habitually hibernate when you need them the most.",
+          "analysis": {
+            "length": 157,
+            "wordCount": 27,
+            "hasCommonPhrases": false,
+            "hasRepetitiveStructure": false,
+            "meetsStyleCriteria": true,
+            "characteristics": {
+              "hasMetaphors": true,
+              "hasEmotionalWords": false,
+              "hasActionWords": false,
+              "hasUniquePhrasing": false,
+              "complexity": {
+                "avgWordLength": 4.851851851851852,
+                "hasComplexStructure": true,
+                "sentenceVariety": true
+              },
+              "hasPunchline": true
+            },
+            "score": 90
+          }
+        }
+      ]
+    },
+    {
+      "category": "INSPIRATIONAL",
+      "tweets": [
+        {
+          "content": "Like rivers, we too shape our path through resistance and perseverance. Every pebble we encounter hones us into a more polished version of ourselves. Embrace your obstacles; they are the master artisans of your individual journey.",
+          "analysis": {
+            "length": 230,
+            "wordCount": 36,
+            "hasCommonPhrases": false,
+            "hasRepetitiveStructure": false,
+            "meetsStyleCriteria": true,
+            "characteristics": {
+              "hasMetaphors": true,
+              "hasEmotionalWords": false,
+              "hasActionWords": false,
+              "hasUniquePhrasing": true,
+              "complexity": {
+                "avgWordLength": 5.416666666666667,
+                "hasComplexStructure": true,
+                "sentenceVariety": true
+              }
+            },
+            "score": 100
+          }
+        },
+        {
+          "content": "In the quiet ocean of the soul, we are wave makers. Each choice stirs ripples, reaching far beyond our understanding. Recognize your own depths and embrace the profound expanse of inner wisdom. For it is in knowing ourselves that we become sailors of lifes boundless sea.",
+          "analysis": {
+            "length": 271,
+            "wordCount": 46,
+            "hasCommonPhrases": false,
+            "hasRepetitiveStructure": false,
+            "meetsStyleCriteria": true,
+            "characteristics": {
+              "hasMetaphors": false,
+              "hasEmotionalWords": true,
+              "hasActionWords": true,
+              "hasUniquePhrasing": true,
+              "complexity": {
+                "avgWordLength": 4.913043478260869,
+                "hasComplexStructure": true,
+                "sentenceVariety": true
+              }
+            },
+            "score": 90
+          }
+        },
+        {
+          "content": "In the orchestra of existence, tune your souls strings to a melody only you can craft. Be the composer, not bystander in lifes symphony; each note a step towards self-discovery. Propel yourself from who am I to here is who I choose to be. The score lies within—write it bravely.",
+          "analysis": {
+            "length": 278,
+            "wordCount": 50,
+            "hasCommonPhrases": false,
+            "hasRepetitiveStructure": false,
+            "meetsStyleCriteria": true,
+            "characteristics": {
+              "hasMetaphors": false,
+              "hasEmotionalWords": true,
+              "hasActionWords": true,
+              "hasUniquePhrasing": true,
+              "complexity": {
+                "avgWordLength": 4.58,
+                "hasComplexStructure": true,
+                "sentenceVariety": true
+              }
+            },
+            "score": 90
+          }
+        }
+      ]
+    },
+    {
+      "category": "GEETA",
+      "tweets": [
+        {
+          "content": "Like a sculptor molds clay to art, shape your actions with detachment. The sweet fruit of work isnt success or failure but the vibrant growth of self that unfolds in its lap. Like an unshakable mountain amid raging storms, let inner peace be your true victory.",
+          "analysis": {
+            "length": 260,
+            "wordCount": 46,
+            "hasCommonPhrases": false,
+            "hasRepetitiveStructure": false,
+            "meetsStyleCriteria": true,
+            "characteristics": {
+              "hasMetaphors": true,
+              "hasEmotionalWords": false,
+              "hasActionWords": false,
+              "hasUniquePhrasing": true,
+              "complexity": {
+                "avgWordLength": 4.673913043478261,
+                "hasComplexStructure": true,
+                "sentenceVariety": true
+              },
+              "hasWisdomElements": false
+            },
+            "score": 100
+          }
+        },
+        {
+          "content": "Like a tech-savvy gardener, cultivate your karma. Dont obsess over the fruit of tomorrows tweet or next weeks promotion. Commit to actions mindfully, nurturing each moment with purposeful presence - and let future outcomes download in their own time. Bhagavad Gita 2.0",
+          "analysis": {
+            "length": 268,
+            "wordCount": 42,
+            "hasCommonPhrases": false,
+            "hasRepetitiveStructure": false,
+            "meetsStyleCriteria": true,
+            "characteristics": {
+              "hasMetaphors": true,
+              "hasEmotionalWords": false,
+              "hasActionWords": false,
+              "hasUniquePhrasing": true,
+              "complexity": {
+                "avgWordLength": 5.404761904761905,
+                "hasComplexStructure": true,
+                "sentenceVariety": true
+              },
+              "hasWisdomElements": true
+            },
+            "score": 90
+          }
+        },
+        {
+          "content": "As rivers lose themselves in the ocean but retain their unique journey, so do we in relationships. Karma is our riverbed, guiding us towards union without losing individuality. Navigating with love and duty, becomes a journey of growth, not just a destination.",
+          "analysis": {
+            "length": 260,
+            "wordCount": 42,
+            "hasCommonPhrases": false,
+            "hasRepetitiveStructure": false,
+            "meetsStyleCriteria": true,
+            "characteristics": {
+              "hasMetaphors": true,
+              "hasEmotionalWords": true,
+              "hasActionWords": false,
+              "hasUniquePhrasing": true,
+              "complexity": {
+                "avgWordLength": 5.214285714285714,
+                "hasComplexStructure": true,
+                "sentenceVariety": true
+              },
+              "hasWisdomElements": true
+            },
+            "score": 100
+          }
+        }
+      ]
+    }
+  ]
+}
