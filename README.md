@@ -1,7 +1,3 @@
-# Automated Twitter Bot
-
-[![Daily Tweet Generation](https://github.com/GunjanGrunge/animated-twitter-chainsaw/actions/workflows/daily-tweets.yml/badge.svg)](https://github.com/GunjanGrunge/animated-twitter-chainsaw/actions/workflows/daily-tweets.yml)
-
 An automated Twitter bot that generates and posts diverse content using OpenAI GPT-4 and Twitter API, with local JSON-based tweet history to prevent duplicates.
 
 ## Features
