@@ -5,6 +5,27 @@ const { TwitterApi } = require('twitter-api-v2');
 const logger = require('./utils/logger');
 const tweetHistory = require('./tweetHistoryManager');
 
+async function saveTweet(tweet) {
+  try {
+    // Ensure tweet has all required fields
+    const tweetToSave = {
+      content: tweet.content,
+      category: tweet.category,
+      createdAt: new Date().toISOString(),
+      scheduledTime: tweet.scheduledTime,
+      status: 'completed',
+      tweetId: tweet.tweetId
+    };
+
+    await tweetHistory.saveTweet(tweetToSave);
+    logger.info('Tweet saved to history successfully', { tweetId: tweet.tweetId });
+    return true;
+  } catch (error) {
+    logger.error('Error saving tweet to history:', error);
+    return false;
+  }
+}
+
 class TweetPoster {
   constructor() {
     this.validateEnv();
@@ -89,90 +110,46 @@ class TweetPoster {
     try {
       logger.info('Starting scheduled tweet posting', { tweetIndex });
 
-      // Load and validate schedule first
       const schedule = await this.loadSchedule();
       if (!schedule.tweets || !schedule.tweets[tweetIndex]) {
-        logger.error('Invalid schedule or tweet index', { 
-          tweetIndex,
-          scheduleExists: !!schedule,
-          tweetsExist: !!schedule?.tweets
-        });
-        // Instead of failing, we'll skip this tweet
-        return null;
+        throw new Error('Invalid schedule or tweet index');
       }
 
       const tweet = schedule.tweets[tweetIndex];
       
-      // Validate tweet format
-      if (!this.validateTweet(tweet)) {
-        logger.error('Invalid tweet format, regenerating tweet', { tweet });
-        // Try to regenerate the tweet
-        const generator = require('./generateSchedule');
-        try {
-          const newTweet = await generator.generateTweet(tweet.category);
-          tweet.content = newTweet;
-          // Update schedule with new tweet
-          await this.updateSchedule(schedule);
-        } catch (error) {
-          logger.error('Failed to regenerate tweet', { error: error.message });
-          // Skip this tweet instead of failing
-          return null;
-        }
-      }
-
       // Verify credentials
-      const credentialsValid = await this.verifyCredentials();
-      if (!credentialsValid) {
-        logger.error('Twitter credentials verification failed');
-        // Skip this tweet instead of failing
-        return null;
-      }
+      await this.verifyCredentials();
 
-      // Post tweet with retries
-      let response;
-      const maxRetries = 3;
-      for (let attempt = 1; attempt <= maxRetries; attempt++) {
-        try {
-          response = await this.postTweet(tweet);
-          break;
-        } catch (error) {
-          if (attempt === maxRetries) {
-            logger.error('Failed to post tweet after retries', { 
-              error: error.message,
-              attempts: attempt 
-            });
-            // Skip this tweet instead of failing
-            return null;
-          }
-          logger.warn(`Retry attempt ${attempt} of ${maxRetries}`);
-          await new Promise(resolve => setTimeout(resolve, 5000 * attempt));
-        }
-      }
-
+      // Post tweet
+      const response = await this.postTweet(tweet);
+      
       if (response) {
-        // Update tweet status
-        schedule.tweets[tweetIndex].status = 'completed';
-        schedule.tweets[tweetIndex].postedAt = new Date().toISOString();
-        schedule.tweets[tweetIndex].tweetId = response.data.id;
+        // Update tweet with response data
+        tweet.tweetId = response.data.id;
+        tweet.status = 'completed';
+        tweet.postedAt = new Date().toISOString();
+        
+        // Update schedule
         await this.updateSchedule(schedule);
-
-        // Save to history only if successfully posted
-        await tweetHistory.saveTweet(tweet);
-
-        logger.info('Tweet posted successfully', {
-          index: tweetIndex,
-          tweetId: response.data.id
+        
+        // Save to history
+        await saveTweet(tweet);
+        
+        logger.info('Tweet posted and saved successfully', {
+          tweetId: response.data.id,
+          index: tweetIndex
         });
+        
+        return response;
       }
 
-      return response;
+      throw new Error('No response from Twitter API');
 
     } catch (error) {
       logger.error('Failed to post scheduled tweet', {
         error: error.message,
         tweetIndex
       });
-      // Return null instead of throwing
       return null;
     }
   }
