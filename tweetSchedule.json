@@ -1,39 +1,39 @@
 {
   "session": "morning",
-  "generatedAt": "2025-02-05T03:12:08.232Z",
-  "totalDuration": 314,
+  "generatedAt": "2025-02-05T11:07:11.606Z",
+  "totalDuration": 266,
   "tweets": [
     {
-      "scheduledTime": "2025-02-05T04:53:08.232Z",
-      "content": "In the garden of connections, let your roots anchor in duty, but leave your petals to sway with the winds of change. Tend the relationships without clinging to blooms—nourish with care and watch them grow or fade as seasons dictate. Balance roles; cherish moments.",
-      "category": "GEETA",
+      "scheduledTime": "2025-02-05T12:51:11.606Z",
+      "content": "In the quiet dawn, a river whispered my name, guiding me through its currents of uncertainties. As I surrendered to the waters embrace, each ripple revealed hidden stories etched in time, urging me to weave my own tapestry from threads of forgotten dreams.",
+      "category": "INSPIRATIONAL",
       "session": "morning",
       "index": 0,
       "status": "pending",
-      "gapToNext": 111
+      "gapToNext": 76
     },
     {
-      "scheduledTime": "2025-02-05T06:44:08.232Z",
-      "content": "In the symphony of dawn, a single raindrop dared to leap from its cloud. It struck a stone and whispered, Let us dance. The pebble replied with ripples that reached further than it could see. Your quiet courage can start waves in unseen ways.",
+      "scheduledTime": "2025-02-05T14:07:11.606Z",
+      "content": "In the dance of dawn, a lone dandelion splits the concrete, whispering to the stars that even underfoot can be conquered skies. Embrace your gritty petals; they are keys unlocking horizons where roots dream and ambitions take flight in unexpected gardens.",
       "category": "MOTIVATIONAL",
       "session": "morning",
       "index": 1,
       "status": "pending",
-      "gapToNext": 106
-    },
-    {
-      "scheduledTime": "2025-02-05T08:30:08.232Z",
-      "content": "In shadows of twilights tender embrace, Dreams unfurl like whispered silks in the breeze. Life dances on threads spun from stardust grace, Love blooms in the cracks where despair once seized. Amidst chaos, the hearts compass finds its way, Hope sparkles softly at dawns quiet s...",
-      "category": "POEM",
-      "session": "morning",
-      "index": 2,
-      "status": "pending",
       "gapToNext": 97
     },
     {
-      "scheduledTime": "2025-02-05T10:07:08.232Z",
-      "content": "Unravel the tapestry of your spirit; each thread a raw memory, unyielding yet gentle. Dive into the symphony of imperfections and plant courage within uncertainty. Let curiosity be the compass that guides your stride through lifes untamed wilderness.",
-      "category": "INSPIRATIONAL",
+      "scheduledTime": "2025-02-05T15:44:11.606Z",
+      "content": "In the garden of connection, every action is a seed planted. Tend with intention, for relationships bloom through mindful watering or wilt in neglect. Karma whispers; each deed echoes back in the dance of hearts intertwined. Choose your seeds wisely, nurture their growth.",
+      "category": "GEETA",
+      "session": "morning",
+      "index": 2,
+      "status": "pending",
+      "gapToNext": 93
+    },
+    {
+      "scheduledTime": "2025-02-05T17:17:11.606Z",
+      "content": "Why did the couple bring a ladder to their date night? They heard relationships are all about taking things to the next level, but he suggested they reach new heights.",
+      "category": "JOKE",
       "session": "morning",
       "index": 3,
       "status": "pending",
