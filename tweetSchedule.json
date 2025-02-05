@@ -1,34 +1,43 @@
 {
-  "session": "test-session",
-  "generatedAt": "2025-01-31T05:50:19.829Z",
+  "session": "morning",
+  "generatedAt": "2025-02-05T03:12:08.232Z",
+  "totalDuration": 314,
   "tweets": [
     {
-      "scheduledTime": "2025-01-31T05:50:19.829Z",
-      "content": "Embrace your path with dedication, act without attachment to outcomes, and find peace within. Lifes challenges are opportunities for growth; resilience and self-discipline guide you. Trust in the journey, knowing every action shapes your destiny. 🌟",
+      "scheduledTime": "2025-02-05T04:53:08.232Z",
+      "content": "In the garden of connections, let your roots anchor in duty, but leave your petals to sway with the winds of change. Tend the relationships without clinging to blooms—nourish with care and watch them grow or fade as seasons dictate. Balance roles; cherish moments.",
       "category": "GEETA",
-      "session": "test-session",
-      "index": 0
+      "session": "morning",
+      "index": 0,
+      "status": "pending",
+      "gapToNext": 111
     },
     {
-      "scheduledTime": "2025-01-31T06:20:19.829Z",
-      "content": "Dreams dont work unless you do. Start today, push through the doubt, and watch your vision become reality. 💪✨",
+      "scheduledTime": "2025-02-05T06:44:08.232Z",
+      "content": "In the symphony of dawn, a single raindrop dared to leap from its cloud. It struck a stone and whispered, Let us dance. The pebble replied with ripples that reached further than it could see. Your quiet courage can start waves in unseen ways.",
       "category": "MOTIVATIONAL",
-      "session": "test-session",
-      "index": 1
+      "session": "morning",
+      "index": 1,
+      "status": "pending",
+      "gapToNext": 106
     },
     {
-      "scheduledTime": "2025-01-31T06:50:19.829Z",
-      "content": "I told my calendar it was time to get organized, but it just flipped out. Guess it couldnt handle the pressure of being so date-oriented! 📅😅",
-      "category": "JOKE",
-      "session": "test-session",
-      "index": 2
+      "scheduledTime": "2025-02-05T08:30:08.232Z",
+      "content": "In shadows of twilights tender embrace, Dreams unfurl like whispered silks in the breeze. Life dances on threads spun from stardust grace, Love blooms in the cracks where despair once seized. Amidst chaos, the hearts compass finds its way, Hope sparkles softly at dawns quiet s...",
+      "category": "POEM",
+      "session": "morning",
+      "index": 2,
+      "status": "pending",
+      "gapToNext": 97
     },
     {
-      "scheduledTime": "2025-01-31T07:20:19.829Z",
-      "content": "Embrace the journey of personal growth; its not about reaching a destination but evolving with every step. Each challenge is a chance to learn, and every setback is a setup for a comeback. Keep moving forward, and watch yourself transform. 🌱✨",
+      "scheduledTime": "2025-02-05T10:07:08.232Z",
+      "content": "Unravel the tapestry of your spirit; each thread a raw memory, unyielding yet gentle. Dive into the symphony of imperfections and plant courage within uncertainty. Let curiosity be the compass that guides your stride through lifes untamed wilderness.",
       "category": "INSPIRATIONAL",
-      "session": "test-session",
-      "index": 3
+      "session": "morning",
+      "index": 3,
+      "status": "pending",
+      "gapToNext": null
     }
   ]
 }
