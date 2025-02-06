@@ -1,39 +1,39 @@
 {
   "session": "morning",
-  "generatedAt": "2025-02-06T03:12:21.376Z",
-  "totalDuration": 279,
+  "generatedAt": "2025-02-06T11:07:09.480Z",
+  "totalDuration": 337,
   "tweets": [
     {
-      "scheduledTime": "2025-02-06T05:05:21.376Z",
-      "content": "Imagine a river that carves through stone—quietly relentless, redefining landscapes. Today, challenge the granite barriers of your comfort. Embrace the flow of change and watch as persistence transforms obstacles into pathways only you can travel.",
-      "category": "MOTIVATIONAL",
+      "scheduledTime": "2025-02-06T12:44:09.480Z",
+      "content": "In the quiet forge of solitude, sculpt your soul with the chisel of introspection. Each deliberate stroke reveals untold landscapes within, urging you to navigate uncharted paths. Embrace the unease; it’s a compass guiding you toward unimagined horizons.",
+      "category": "INSPIRATIONAL",
       "session": "morning",
       "index": 0,
       "status": "pending",
-      "gapToNext": 94
+      "gapToNext": 107
     },
     {
-      "scheduledTime": "2025-02-06T06:39:21.376Z",
-      "content": "In the whisper of autumns breath, Dusty train tracks hum old tales. Lantern light kisses cobblestones, While shadows embrace forgotten dreams. A lone bird stitches sky to memory, Love woven in twilight’s fabric—a sigh. Yet echoes yearn for voices lost.",
-      "category": "POEM",
+      "scheduledTime": "2025-02-06T14:31:09.480Z",
+      "content": "Why did the smartphone meditate? It needed a moment of silence to process all its notifications about mindfulness apps.",
+      "category": "JOKE",
       "session": "morning",
       "index": 1,
       "status": "pending",
-      "gapToNext": 99
+      "gapToNext": 114
     },
     {
-      "scheduledTime": "2025-02-06T08:18:21.376Z",
-      "content": "In the digital maze of constant notifications, remember to be like a lighthouse. Stand firm in your duty, guiding ships through chaos. Let each action ripple outward with purpose, as the ocean honors your light by finding its way home amidst the stormy feed.",
-      "category": "GEETA",
+      "scheduledTime": "2025-02-06T16:25:09.480Z",
+      "content": "Under the pale glow of streetlights, whispers of autumn linger— where we danced on fading shadows. Your laugh was a melody, now an echo, woven in threads of dusk. We once carved dreams into twilights spine; now ghosts cradle silent lullabies.",
+      "category": "POEM",
       "session": "morning",
       "index": 2,
       "status": "pending",
-      "gapToNext": 86
+      "gapToNext": 116
     },
     {
-      "scheduledTime": "2025-02-06T09:44:21.376Z",
-      "content": "In the quiet forge of dusk, where rivers paint secrets on stones, we find that lifes currents are not just journey but sculptor. Embrace each eddy; let it carve wisdom into the bedrock of your soul, revealing landscapes only the patient heart can truly explore.",
-      "category": "INSPIRATIONAL",
+      "scheduledTime": "2025-02-06T18:21:09.480Z",
+      "content": "In the garden of action, plant seeds with intention but let go of fruits allure. The sun of effort shines brightest when duty waters each day, unburdened by harvest dreams. Find peace in every soil-turn and watch fulfillment bloom within every honest stride.",
+      "category": "GEETA",
       "session": "morning",
       "index": 3,
       "status": "pending",
