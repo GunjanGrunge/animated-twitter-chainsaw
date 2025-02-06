@@ -1,39 +1,39 @@
 {
   "session": "morning",
-  "generatedAt": "2025-02-05T11:07:11.606Z",
-  "totalDuration": 266,
+  "generatedAt": "2025-02-06T03:12:21.376Z",
+  "totalDuration": 279,
   "tweets": [
     {
-      "scheduledTime": "2025-02-05T12:51:11.606Z",
-      "content": "In the quiet dawn, a river whispered my name, guiding me through its currents of uncertainties. As I surrendered to the waters embrace, each ripple revealed hidden stories etched in time, urging me to weave my own tapestry from threads of forgotten dreams.",
-      "category": "INSPIRATIONAL",
+      "scheduledTime": "2025-02-06T05:05:21.376Z",
+      "content": "Imagine a river that carves through stone—quietly relentless, redefining landscapes. Today, challenge the granite barriers of your comfort. Embrace the flow of change and watch as persistence transforms obstacles into pathways only you can travel.",
+      "category": "MOTIVATIONAL",
       "session": "morning",
       "index": 0,
       "status": "pending",
-      "gapToNext": 76
+      "gapToNext": 94
     },
     {
-      "scheduledTime": "2025-02-05T14:07:11.606Z",
-      "content": "In the dance of dawn, a lone dandelion splits the concrete, whispering to the stars that even underfoot can be conquered skies. Embrace your gritty petals; they are keys unlocking horizons where roots dream and ambitions take flight in unexpected gardens.",
-      "category": "MOTIVATIONAL",
+      "scheduledTime": "2025-02-06T06:39:21.376Z",
+      "content": "In the whisper of autumns breath, Dusty train tracks hum old tales. Lantern light kisses cobblestones, While shadows embrace forgotten dreams. A lone bird stitches sky to memory, Love woven in twilight’s fabric—a sigh. Yet echoes yearn for voices lost.",
+      "category": "POEM",
       "session": "morning",
       "index": 1,
       "status": "pending",
-      "gapToNext": 97
+      "gapToNext": 99
     },
     {
-      "scheduledTime": "2025-02-05T15:44:11.606Z",
-      "content": "In the garden of connection, every action is a seed planted. Tend with intention, for relationships bloom through mindful watering or wilt in neglect. Karma whispers; each deed echoes back in the dance of hearts intertwined. Choose your seeds wisely, nurture their growth.",
+      "scheduledTime": "2025-02-06T08:18:21.376Z",
+      "content": "In the digital maze of constant notifications, remember to be like a lighthouse. Stand firm in your duty, guiding ships through chaos. Let each action ripple outward with purpose, as the ocean honors your light by finding its way home amidst the stormy feed.",
       "category": "GEETA",
       "session": "morning",
       "index": 2,
       "status": "pending",
-      "gapToNext": 93
+      "gapToNext": 86
     },
     {
-      "scheduledTime": "2025-02-05T17:17:11.606Z",
-      "content": "Why did the couple bring a ladder to their date night? They heard relationships are all about taking things to the next level, but he suggested they reach new heights.",
-      "category": "JOKE",
+      "scheduledTime": "2025-02-06T09:44:21.376Z",
+      "content": "In the quiet forge of dusk, where rivers paint secrets on stones, we find that lifes currents are not just journey but sculptor. Embrace each eddy; let it carve wisdom into the bedrock of your soul, revealing landscapes only the patient heart can truly explore.",
+      "category": "INSPIRATIONAL",
       "session": "morning",
       "index": 3,
       "status": "pending",
