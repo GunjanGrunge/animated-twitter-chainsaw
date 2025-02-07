@@ -1,39 +1,39 @@
 {
   "session": "morning",
-  "generatedAt": "2025-02-07T03:13:27.176Z",
-  "totalDuration": 259,
+  "generatedAt": "2025-02-07T11:06:51.455Z",
+  "totalDuration": 281,
   "tweets": [
     {
-      "scheduledTime": "2025-02-07T04:39:27.176Z",
-      "content": "Neon whispers paint the skyline, where rain tattoos on concrete pulse. Footsteps echo down alleys of solitude, a citys heartbeats syncopate with absence. In shadowed corners, dreams flicker like old streetlamps— hungry for hands that never arrived to light them anew.",
-      "category": "POEM",
+      "scheduledTime": "2025-02-07T13:06:51.455Z",
+      "content": "In the quiet dance of shadows, we learn that growth often whispers through the cracks. A heart, like a seasoned map, knows where to find its own North amidst storms. Trust in the gentle pull of your inner compass; it leads you where sunlight paints forgotten dreams.",
+      "category": "INSPIRATIONAL",
       "session": "morning",
       "index": 0,
       "status": "pending",
-      "gapToNext": 84
+      "gapToNext": 80
     },
     {
-      "scheduledTime": "2025-02-07T06:03:27.176Z",
-      "content": "In a forgotten corner of the garden, an unlikely seed sprouted amidst cracked stones. With determined roots weaving through obstacles, it bore fruit to the sun. Embrace your own stark terrain; even in the unlikeliest soil, resilience can craft a unique bloom. Nurture it.",
-      "category": "MOTIVATIONAL",
+      "scheduledTime": "2025-02-07T14:26:51.455Z",
+      "content": "In the digital jungle of scrolling and swiping, remember: karma is your invisible footprint. Every click and comment echoes in the vast web of existence. Tread mindfully; what you weave online shapes the tapestry of tomorrows reality.",
+      "category": "GEETA",
       "session": "morning",
       "index": 1,
       "status": "pending",
-      "gapToNext": 96
+      "gapToNext": 113
     },
     {
-      "scheduledTime": "2025-02-07T07:39:27.176Z",
-      "content": "Why did the laptop suddenly propose to the smartphone? It realized they had too much bandwidth chemistry and couldnt keyboard their feelings anymore, even though it feared being blue-screen friend-zoned.",
-      "category": "JOKE",
+      "scheduledTime": "2025-02-07T16:19:51.455Z",
+      "content": "In the forests silent heart, a single fern unfurls through the ancient moss, bending light to its will. Like sun forging paths in shadows, your quiet persistence shapes worlds unseen. Embrace the whisper of resilience; even unnoticed growth cracks stone.",
+      "category": "MOTIVATIONAL",
       "session": "morning",
       "index": 2,
       "status": "pending",
-      "gapToNext": 79
+      "gapToNext": 88
     },
     {
-      "scheduledTime": "2025-02-07T08:58:27.176Z",
-      "content": "When a river dreams beyond its banks, it discovers new paths, carving landscapes with time and persistence. So too does the soul; flowing patiently through valleys of doubt until it sculpts visions into reality—unafraid of uncharted waters yet respectful of its own current.",
-      "category": "INSPIRATIONAL",
+      "scheduledTime": "2025-02-07T17:47:51.455Z",
+      "content": "I accidentally forwarded an email about work-life balance to the cloud. Now its trying to schedule a meeting with rain and shine—and I think they’re bringing thunder as a plus one!",
+      "category": "JOKE",
       "session": "morning",
       "index": 3,
       "status": "pending",
