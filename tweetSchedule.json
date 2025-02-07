@@ -1,39 +1,39 @@
 {
   "session": "morning",
-  "generatedAt": "2025-02-06T11:07:09.480Z",
-  "totalDuration": 337,
+  "generatedAt": "2025-02-07T03:13:27.176Z",
+  "totalDuration": 259,
   "tweets": [
     {
-      "scheduledTime": "2025-02-06T12:44:09.480Z",
-      "content": "In the quiet forge of solitude, sculpt your soul with the chisel of introspection. Each deliberate stroke reveals untold landscapes within, urging you to navigate uncharted paths. Embrace the unease; it’s a compass guiding you toward unimagined horizons.",
-      "category": "INSPIRATIONAL",
+      "scheduledTime": "2025-02-07T04:39:27.176Z",
+      "content": "Neon whispers paint the skyline, where rain tattoos on concrete pulse. Footsteps echo down alleys of solitude, a citys heartbeats syncopate with absence. In shadowed corners, dreams flicker like old streetlamps— hungry for hands that never arrived to light them anew.",
+      "category": "POEM",
       "session": "morning",
       "index": 0,
       "status": "pending",
-      "gapToNext": 107
+      "gapToNext": 84
     },
     {
-      "scheduledTime": "2025-02-06T14:31:09.480Z",
-      "content": "Why did the smartphone meditate? It needed a moment of silence to process all its notifications about mindfulness apps.",
-      "category": "JOKE",
+      "scheduledTime": "2025-02-07T06:03:27.176Z",
+      "content": "In a forgotten corner of the garden, an unlikely seed sprouted amidst cracked stones. With determined roots weaving through obstacles, it bore fruit to the sun. Embrace your own stark terrain; even in the unlikeliest soil, resilience can craft a unique bloom. Nurture it.",
+      "category": "MOTIVATIONAL",
       "session": "morning",
       "index": 1,
       "status": "pending",
-      "gapToNext": 114
+      "gapToNext": 96
     },
     {
-      "scheduledTime": "2025-02-06T16:25:09.480Z",
-      "content": "Under the pale glow of streetlights, whispers of autumn linger— where we danced on fading shadows. Your laugh was a melody, now an echo, woven in threads of dusk. We once carved dreams into twilights spine; now ghosts cradle silent lullabies.",
-      "category": "POEM",
+      "scheduledTime": "2025-02-07T07:39:27.176Z",
+      "content": "Why did the laptop suddenly propose to the smartphone? It realized they had too much bandwidth chemistry and couldnt keyboard their feelings anymore, even though it feared being blue-screen friend-zoned.",
+      "category": "JOKE",
       "session": "morning",
       "index": 2,
       "status": "pending",
-      "gapToNext": 116
+      "gapToNext": 79
     },
     {
-      "scheduledTime": "2025-02-06T18:21:09.480Z",
-      "content": "In the garden of action, plant seeds with intention but let go of fruits allure. The sun of effort shines brightest when duty waters each day, unburdened by harvest dreams. Find peace in every soil-turn and watch fulfillment bloom within every honest stride.",
-      "category": "GEETA",
+      "scheduledTime": "2025-02-07T08:58:27.176Z",
+      "content": "When a river dreams beyond its banks, it discovers new paths, carving landscapes with time and persistence. So too does the soul; flowing patiently through valleys of doubt until it sculpts visions into reality—unafraid of uncharted waters yet respectful of its own current.",
+      "category": "INSPIRATIONAL",
       "session": "morning",
       "index": 3,
       "status": "pending",
