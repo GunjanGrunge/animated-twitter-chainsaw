@@ -1,39 +1,39 @@
 {
   "session": "morning",
-  "generatedAt": "2025-02-07T11:06:51.455Z",
-  "totalDuration": 281,
+  "generatedAt": "2025-02-08T03:10:42.491Z",
+  "totalDuration": 292,
   "tweets": [
     {
-      "scheduledTime": "2025-02-07T13:06:51.455Z",
-      "content": "In the quiet dance of shadows, we learn that growth often whispers through the cracks. A heart, like a seasoned map, knows where to find its own North amidst storms. Trust in the gentle pull of your inner compass; it leads you where sunlight paints forgotten dreams.",
+      "scheduledTime": "2025-02-08T04:38:42.491Z",
+      "content": "In the garden of whispers, a seed of curiosity meets soils gentle embrace. There, under a moonlit symphony, it learns that roots stretch far beyond sight. Growth isnt a destination but an intricate dance with shadows and light, weaving wisdom in silence.",
       "category": "INSPIRATIONAL",
       "session": "morning",
       "index": 0,
       "status": "pending",
-      "gapToNext": 80
+      "gapToNext": 111
     },
     {
-      "scheduledTime": "2025-02-07T14:26:51.455Z",
-      "content": "In the digital jungle of scrolling and swiping, remember: karma is your invisible footprint. Every click and comment echoes in the vast web of existence. Tread mindfully; what you weave online shapes the tapestry of tomorrows reality.",
-      "category": "GEETA",
+      "scheduledTime": "2025-02-08T06:29:42.491Z",
+      "content": "In the garden of time, whispers bloom; A golden thread weaves through morning mist. Love dances like sunlight on dew-tipped leaves, Life hums in a symphony of rustling dreams. Struggles shadow fades as dawns embrace warms, Joy sprouts from seeds of nights gentle storms.",
+      "category": "POEM",
       "session": "morning",
       "index": 1,
       "status": "pending",
-      "gapToNext": 113
+      "gapToNext": 97
     },
     {
-      "scheduledTime": "2025-02-07T16:19:51.455Z",
-      "content": "In the forests silent heart, a single fern unfurls through the ancient moss, bending light to its will. Like sun forging paths in shadows, your quiet persistence shapes worlds unseen. Embrace the whisper of resilience; even unnoticed growth cracks stone.",
-      "category": "MOTIVATIONAL",
+      "scheduledTime": "2025-02-08T08:06:42.491Z",
+      "content": "In the office time zone, clocks run on caffeine logic: 9AM stretches like yoga till lunchtime, but post-lunch it’s warp speed to 5PM. Paradox? I stayed late yesterday, and today Im already ahead on tomorrows regrets!",
+      "category": "JOKE",
       "session": "morning",
       "index": 2,
       "status": "pending",
-      "gapToNext": 88
+      "gapToNext": 84
     },
     {
-      "scheduledTime": "2025-02-07T17:47:51.455Z",
-      "content": "I accidentally forwarded an email about work-life balance to the cloud. Now its trying to schedule a meeting with rain and shine—and I think they’re bringing thunder as a plus one!",
-      "category": "JOKE",
+      "scheduledTime": "2025-02-08T09:30:42.491Z",
+      "content": "Navigate lifes maze with the compass of karma. Each step you take is a brushstroke on your destinys canvas. Act not for applause, but to perfect your craft, turning every moment into an opportunity for growth and a masterpiece in progress.",
+      "category": "GEETA",
       "session": "morning",
       "index": 3,
       "status": "pending",
